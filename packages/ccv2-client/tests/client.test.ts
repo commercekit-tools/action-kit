@@ -438,3 +438,10 @@ it('safe-read timeouts stop after the configured attempt bound', async () => {
   ).rejects.toMatchObject({ code: 'TIMEOUT' });
   expect(fetcher).toHaveBeenCalledTimes(2);
 });
+it('safe transport errors have no stack, cause, raw response or request', () => {
+  const error = new Ccv2TransportError('REQUEST_FAILED');
+  expect(error.stack).toBeUndefined();
+  expect(error.cause).toBeUndefined();
+  for (const key of ['raw', 'response', 'headers', 'request', 'body']) expect(error).not.toHaveProperty(key);
+  expect(JSON.stringify(error)).toBe('{"code":"REQUEST_FAILED"}');
+});

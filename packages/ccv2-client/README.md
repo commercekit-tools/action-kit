@@ -15,7 +15,11 @@ export async function readPortal(credentials: ConstructorParameters<typeof Techn
       },
     },
   });
-  const client = createCcv2Client({ baseUrl: 'https://synthetic.example/api/', tokens });
+  const client = createCcv2Client({
+    baseUrl: 'https://synthetic.example/api/',
+    tokens,
+    secrets: Object.values(credentials),
+  });
   return client.request('synthetic-path', { policy: 'safe-read', refreshOn401: true });
 }
 ```
@@ -26,7 +30,7 @@ Every request requires `token`, `safe-read` or `unsafe-mutation`. Token/safe-rea
 
 Responses are `{kind:'json',value:unknown}`, `{kind:'empty'}` or `{kind:'binary',value:Uint8Array,contentType?}`. JSON supports arrays and primitives; empty 202/204 is valid. Content type controls JSON parsing. Default bound is 256 KiB; timeout 30s. Caller signal, timeout, absolute epoch-ms deadline, retry attempts/delays/Retry-After cap are configurable. `parseRetryAfter` supports integer seconds and HTTP dates, bounded by an optional caller cap. Default backoff is exponential with up to 250ms injected jitter and a 30s backoff cap; Retry-After is constrained separately and deadlines fail instead of shortening required waits.
 
-HTTP error replies discard raw bodies and expose status plus optional redacted bounded problem facts. Actions decide whether to show title/detail. Safe transport errors serialize only code/status/problem; never expose stack to end users. Success bodies remain untrusted and must be projected by consumers. HTTPS, no credentials/query/fragment and blocked redirects apply; management bases normalize trailing slash. Endpoints must be trusted configuration, not arbitrary user URLs.
+HTTP error replies discard raw bodies and expose status plus optional redacted bounded problem facts. Actions decide whether to show title/detail. Safe transport errors serialize only code/status/problem; the inherited stack property is removed. Success bodies remain untrusted and must be projected by consumers. HTTPS, no credentials/query/fragment and blocked redirects apply; management bases normalize trailing slash. Endpoints must be trusted configuration, not arbitrary user URLs.
 
 Inject fetch, clock, abortable sleep, random and secret masking through `runtime`; defaults use standard Node APIs. Injected implementations must honor AbortSignal. No filesystem credential storage exists.
 

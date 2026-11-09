@@ -1,19 +1,32 @@
-import { mkdtempSync, writeFileSync, rmSync, statSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, rmSync, statSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { resolve, join } from 'node:path';
+import { resolve, join, dirname } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { inspectTarball } from './check-package-contents.mjs';
 const root = process.cwd();
 const selected = process.argv[2];
 const names = ['notification-contract', 'ccv2-client'];
 if (selected && !names.includes(selected)) throw Error('Unknown selected package.');
-const run = (command, args, cwd = root) =>
-  execFileSync(command, args, {
-    cwd,
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe'],
-    ...(process.platform === 'win32' ? { shell: true } : {}),
-  });
+const run = (command, args, cwd = root) => {
+  const options = { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] };
+  // Invoke JS CLIs with Node on every platform; never pass code or paths through a shell.
+  if (command === 'pnpm') {
+    const executable = process.env.npm_execpath;
+    if (!executable) throw Error('Run pack:check through pnpm.');
+    return /\.[cm]?js$/.test(executable)
+      ? execFileSync(process.execPath, [executable, ...args], options)
+      : execFileSync(executable, args, options);
+  }
+  if (command === 'npm') {
+    const npmCli = [
+      resolve(dirname(process.execPath), 'node_modules/npm/bin/npm-cli.js'),
+      resolve(dirname(process.execPath), '../lib/node_modules/npm/bin/npm-cli.js'),
+    ].find(existsSync);
+    if (!npmCli) throw Error('Cannot locate the npm CLI supplied with Node.');
+    return execFileSync(process.execPath, [npmCli, ...args], options);
+  }
+  return execFileSync(command, args, options);
+};
 const temp = mkdtempSync(join(tmpdir(), 'commercekit-pack-'));
 try {
   run('pnpm', ['build']);

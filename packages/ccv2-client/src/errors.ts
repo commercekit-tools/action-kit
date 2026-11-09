@@ -19,6 +19,7 @@ export class Ccv2TransportError extends Error {
   ) {
     super(`CCv2 transport: ${code}.`);
     this.name = 'Ccv2TransportError';
+    delete this.stack;
   }
   toJSON() {
     return {
