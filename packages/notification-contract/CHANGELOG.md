@@ -1,5 +1,7 @@
 # notification-contract changelog
 
-## 0.1.0-preview.1
+## 0.0.1
 
-Unreleased intended first preview. Initial framework-independent NotificationEvent v1 schema, validation, safe context, factories and text primitives. Compatibility fixtures and installed-package tests accompany the API. No supported publication is claimed.
+Initial NotificationEvent v1 schema, exact types, semantic validation, safe context merge, event factories and sanitization primitives.
+
+Initial pre-1.0 release for exact-version integration by CommerceKit Actions. Distributed under the `preview` npm dist-tag and marked as a GitHub prerelease; no stable API guarantee is made. Synthetic compatibility adapters, public scanning and installed-tarball tests pass. Consumer migrations and coordinated Sandbox gates remain separate work.

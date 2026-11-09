@@ -2,11 +2,11 @@
 
 Each package has its own manifest version, changelog, dist-tags and immutable package-specific Git tags. There is no root release and no moving `v1` package tag.
 
-| Stage       | Version            | Dist-tag   | Support                      |
-| ----------- | ------------------ | ---------- | ---------------------------- |
-| Reservation | `0.0.0-reserved.1` | `reserved` | Unsupported placeholder only |
-| Preview     | `0.x.y-preview.n`  | `preview`  | Reviewed prerelease          |
-| Stable      | `1.0.0` and later  | `latest`   | Coordinated stable support   |
+| Stage       | Version                                       | Dist-tag   | Support                      |
+| ----------- | --------------------------------------------- | ---------- | ---------------------------- |
+| Reservation | `0.0.0-reserved.1`                            | `reserved` | Unsupported placeholder only |
+| Preview     | `0.x.y` (except `0.0.0`) or `0.x.y-preview.n` | `preview`  | Reviewed prerelease          |
+| Stable      | `1.0.0` and later                             | `latest`   | Coordinated stable support   |
 
 Tags are `notification-contract-v<version>` and `ccv2-client-v<version>`. Notification schema version is a separate contract identifier. Breaking stable API changes require a major version bump.
 
@@ -19,3 +19,5 @@ See RELEASING.md for dispatch confirmations and partial-failure recovery. No pub
 Publication requires successful quality, three platform checks and CodeQL analysis for the exact commit. The newest check from the expected official app (GitHub Actions for CI/analysis; GitHub Advanced Security for the CodeQL result) must be completed successfully; an older green run cannot override a failed or pending rerun. Check evidence is paginated and validation fails closed.
 
 The selected tarball is built, content-scanned, installed, imported and typechecked before it is retained. The publish step verifies its SHA-256 and publishes that same tarball with lifecycle scripts disabled. Normal `pnpm pack:check` still cleans every temporary file. Optional `pnpm pack:check <package> --output-directory <absolute-directory>` retains one tested tarball for owner inspection or the manual publication workflow; retained files belong outside the repository and must never be committed.
+
+The owner-requested first integration release is `0.0.1` for both packages. It uses the preview publication channel and `preview` dist-tag even though the version has no SemVer prerelease suffix. Its GitHub Releases are marked prerelease. This permits exact-version consumer adoption without claiming the coordinated stable/1.0 gates have passed. The stable channel remains restricted to 1.0.0 and later.

@@ -2,6 +2,13 @@ import { readFileSync, appendFileSync } from 'node:fs';
 export const packages = ['notification-contract', 'ccv2-client'];
 export const versionPattern =
   /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*))?$/;
+export function isPreviewVersion(version) {
+  return (
+    versionPattern.test(version) &&
+    /^0\.\d+\.\d+(?:-preview\.[1-9]\d*)?$/.test(version) &&
+    !/^0\.0\.0(?:$|-)/.test(version)
+  );
+}
 export function releasePlan(name, channel, confirmation) {
   if (!packages.includes(name) || !['preview', 'stable'].includes(channel))
     throw Error('Invalid package/channel.');
@@ -11,7 +18,7 @@ export function releasePlan(name, channel, confirmation) {
   if (
     !versionPattern.test(manifest.version) ||
     (channel === 'preview'
-      ? !/^0\.\d+\.\d+-preview\.[1-9]\d*$/.test(manifest.version)
+      ? !isPreviewVersion(manifest.version)
       : manifest.version.includes('-') || Number(manifest.version.split('.')[0]) < 1)
   )
     throw Error('Version does not match publication channel.');

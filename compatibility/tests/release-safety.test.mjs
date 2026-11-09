@@ -1,13 +1,13 @@
 import { it, expect } from 'vitest';
-import { releasePlan, versionPattern } from '../../scripts/release-plan.mjs';
+import { releasePlan, versionPattern, isPreviewVersion } from '../../scripts/release-plan.mjs';
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-it('publication requires exact package/channel/confirmation and prerelease version', () => {
+it('publication requires exact package/channel/confirmation and pre-1.0 version', () => {
   for (const name of ['notification-contract', 'ccv2-client'])
     expect(releasePlan(name, 'preview', 'PUBLISH-COMMERCEKIT-PREVIEW')).toMatchObject({
-      version: '0.1.0-preview.1',
+      version: '0.0.1',
       tag: 'preview',
     });
   for (const args of [
@@ -78,4 +78,18 @@ it('public scan rejects secrets without printing their value', async () => {
     expect(() => scanPublicContent(value, 'synthetic-test')).toThrow('synthetic-test');
   }
   expect(() => scanPublicContent('synthetic-build', 'fixture')).not.toThrow();
+});
+
+it('accepts initial numeric releases only in the pre-1.0 preview channel', () => {
+  for (const version of ['0.0.1', '0.1.0', '0.1.0-preview.1']) expect(isPreviewVersion(version)).toBe(true);
+  for (const version of [
+    '0.0.0',
+    '0.0.0-reserved.1',
+    '0.0.0-preview.1',
+    '1.0.0',
+    '1.0.0-preview.1',
+    '0.0.1-other.1',
+    '0.0.1-preview.01',
+  ])
+    expect(isPreviewVersion(version)).toBe(false);
 });

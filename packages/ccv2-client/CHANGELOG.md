@@ -1,5 +1,7 @@
 # ccv2-client changelog
 
-## 0.1.0-preview.1
+## 0.0.1
 
-Unreleased intended first preview. Initial framework-independent technical-user OAuth, memory token cache and explicit policy-driven HTTP transport. Compatibility fixtures and installed-package tests accompany the API. No supported publication is claimed.
+Initial technical-user OAuth, memory-only token management, explicit safe-read/unsafe-mutation policies and bounded JSON/empty/binary HTTP transport.
+
+Initial pre-1.0 release for exact-version integration by CommerceKit Actions. Distributed under the `preview` npm dist-tag and marked as a GitHub prerelease; no stable API guarantee is made. Synthetic compatibility adapters, public scanning and installed-tarball tests pass. Consumer migrations and coordinated Sandbox gates remain separate work.

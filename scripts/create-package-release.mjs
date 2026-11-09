@@ -102,7 +102,7 @@ try {
     `${manifest.name}@${version}`,
     '--notes-file',
     join(temp, 'notes.md'),
-    ...(version.includes('-') ? ['--prerelease'] : []),
+    ...(version.startsWith('0.') || version.includes('-') ? ['--prerelease'] : []),
   ]);
 } finally {
   rmSync(temp, { recursive: true, force: true });

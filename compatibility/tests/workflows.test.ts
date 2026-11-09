@@ -92,3 +92,8 @@ it('registry workflows disable automatic package-manager caching', () => {
     expect(setup.with?.['package-manager-cache']).toBe(false);
   }
 });
+
+it('marks zero-major package GitHub Releases as prereleases', () => {
+  const script = readFileSync('scripts/create-package-release.mjs', 'utf8');
+  expect(script).toContain("version.startsWith('0.') || version.includes('-')");
+});
