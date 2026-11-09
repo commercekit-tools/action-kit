@@ -24,8 +24,12 @@ for (const name of ['reserve-package-names', 'publish-package', 'create-package-
     expect(w.concurrency['cancel-in-progress']).toBe(false);
     expect(w.permissions).toEqual(
       name === 'create-package-release'
-        ? { contents: 'write', packages: 'read', checks: 'read' }
-        : { contents: 'read', packages: 'write', ...(name === 'publish-package' ? { checks: 'read' } : {}) },
+        ? { contents: 'write', packages: 'read', checks: 'read', 'security-events': 'read' }
+        : {
+            contents: 'read',
+            packages: 'write',
+            ...(name === 'publish-package' ? { checks: 'read', 'security-events': 'read' } : {}),
+          },
     );
     expect(JSON.stringify(w.jobs)).toContain('refs/heads/main');
   });

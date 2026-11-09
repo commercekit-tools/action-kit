@@ -20,6 +20,7 @@ permissions:
   contents: write
   packages: read
   checks: read
+  security-events: read
 concurrency:
   group: action-kit-package-release
   cancel-in-progress: false

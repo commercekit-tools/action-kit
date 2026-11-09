@@ -1,7 +1,11 @@
 import { it, expect } from 'vitest';
-import { assertReleaseChecks, requiredReleaseChecks } from '../../scripts/release-checks.mjs';
+import {
+  assertReleaseChecks,
+  requiredReleaseChecks,
+  assertMainCodeqlEvidence,
+} from '../../scripts/release-checks.mjs';
 const passed = () =>
-  requiredReleaseChecks.map((name, index) => ({
+  [...requiredReleaseChecks, 'CodeQL'].map((name, index) => ({
     name,
     id: index + 1,
     app: { slug: name === 'CodeQL' ? 'github-advanced-security' : 'github-actions' },
@@ -51,4 +55,41 @@ it('rejects an Actions check impersonating the security app result', () => {
   const checks = passed();
   checks.find((check) => check.name === 'CodeQL').app.slug = 'github-actions';
   expect(() => assertReleaseChecks([{ check_runs: checks }])).toThrow('CodeQL');
+});
+
+it('accepts main checks without the PR-only CodeQL security check', () =>
+  expect(() =>
+    assertReleaseChecks([{ check_runs: passed().filter((check) => check.name !== 'CodeQL') }]),
+  ).not.toThrow());
+const sha = 'a'.repeat(40);
+const analysis = () => ({
+  id: 10,
+  commit_sha: sha,
+  ref: 'refs/heads/main',
+  tool: { name: 'CodeQL' },
+  analysis_key: '.github/workflows/codeql.yml:analyze',
+  error: '',
+  warning: '',
+});
+it('requires an exact main-commit analysis with no errors, warnings or open alerts', () => {
+  expect(() => assertMainCodeqlEvidence([[], [analysis()]], [[]], sha)).not.toThrow();
+  for (const patch of [
+    { commit_sha: 'b'.repeat(40) },
+    { ref: 'refs/pull/1/merge' },
+    { tool: { name: 'other' } },
+    { analysis_key: 'other' },
+    { error: 'failed' },
+    { warning: 'partial scan' },
+  ])
+    expect(() => assertMainCodeqlEvidence([[{ ...analysis(), ...patch }]], [[]], sha)).toThrow();
+  expect(() =>
+    assertMainCodeqlEvidence([[analysis(), { ...analysis(), id: 11, error: 'failed' }]], [[]], sha),
+  ).toThrow();
+  expect(() =>
+    assertMainCodeqlEvidence([[analysis()]], [[{ state: 'open', tool: { name: 'CodeQL' } }]], sha),
+  ).toThrow('alerts');
+  expect(() =>
+    assertMainCodeqlEvidence([[analysis()]], [[{ state: 'fixed', tool: { name: 'CodeQL' } }]], sha),
+  ).not.toThrow();
+  for (const pages of [null, {}, [{}]]) expect(() => assertMainCodeqlEvidence(pages, [[]], sha)).toThrow();
 });
