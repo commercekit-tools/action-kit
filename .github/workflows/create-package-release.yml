@@ -1,0 +1,48 @@
+name: Create package release
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        type: choice
+        options: [notification-contract, ccv2-client]
+        required: true
+      version:
+        type: string
+        required: true
+      commit-sha:
+        type: string
+        required: false
+        description: Full commit SHA (defaults to current main)
+      confirmation:
+        type: string
+        required: true
+permissions:
+  contents: write
+  packages: read
+concurrency:
+  group: action-kit-package-release
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main' && inputs.confirmation == 'CREATE-COMMERCEKIT-PACKAGE-RELEASE'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      SELECTED_PACKAGE: ${{ inputs.package }}
+      VERSION: ${{ inputs.version }}
+      COMMIT_SHA: ${{ inputs.commit-sha }}
+      CONFIRMATION: ${{ inputs.confirmation }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version-file: .node-version
+          registry-url: https://npm.pkg.github.com
+          scope: '@commercekit-tools'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: node scripts/create-package-release.mjs

@@ -1,0 +1,42 @@
+{
+  "name": "@commercekit-tools/notification-contract",
+  "version": "0.1.0-preview.1",
+  "description": "Provider-neutral NotificationEvent v1 contracts and factories.",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/commercekit-tools/action-kit.git",
+    "directory": "packages/notification-contract"
+  },
+  "homepage": "https://github.com/commercekit-tools/action-kit/tree/main/packages/notification-contract",
+  "bugs": "https://github.com/commercekit-tools/action-kit/issues",
+  "engines": {
+    "node": ">=24.21.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./schema": "./dist/notification-event-v1.schema.json",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node ../../scripts/copy-schema.mjs"
+  },
+  "dependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1"
+  }
+}

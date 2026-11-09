@@ -1,0 +1,42 @@
+name: Reserve package names
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        required: true
+        type: string
+permissions:
+  contents: read
+  packages: write
+concurrency:
+  group: action-kit-package-reservation
+  cancel-in-progress: false
+jobs:
+  reserve:
+    if: github.ref == 'refs/heads/main' && inputs.confirmation == 'RESERVE-COMMERCEKIT-PACKAGES'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      CONFIRMATION: ${{ inputs.confirmation }}
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version-file: .node-version
+          registry-url: https://npm.pkg.github.com
+          scope: '@commercekit-tools'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - id: reservation
+        run: node scripts/create-reservation-package.mjs
+      - name: Verify both names before either publication
+        run: |
+          node scripts/verify-registry-version.mjs notification-contract 0.0.0-reserved.1 absent
+          node scripts/verify-registry-version.mjs ccv2-client 0.0.0-reserved.1 absent
+      - name: Publish minimal unsupported reservations
+        env:
+          RESERVATION_DIRECTORY: ${{ steps.reservation.outputs.directory }}
+        run: |
+          npm publish "$RESERVATION_DIRECTORY/notification-contract" --tag reserved --registry=https://npm.pkg.github.com
+          npm publish "$RESERVATION_DIRECTORY/ccv2-client" --tag reserved --registry=https://npm.pkg.github.com

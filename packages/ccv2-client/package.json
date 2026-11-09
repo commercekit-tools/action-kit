@@ -1,0 +1,37 @@
+{
+  "name": "@commercekit-tools/ccv2-client",
+  "version": "0.1.0-preview.1",
+  "description": "Framework-independent CCv2 technical-user authentication and safe HTTP transport.",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/commercekit-tools/action-kit.git",
+    "directory": "packages/ccv2-client"
+  },
+  "homepage": "https://github.com/commercekit-tools/action-kit/tree/main/packages/ccv2-client",
+  "bugs": "https://github.com/commercekit-tools/action-kit/issues",
+  "engines": {
+    "node": ">=24.21.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  }
+}

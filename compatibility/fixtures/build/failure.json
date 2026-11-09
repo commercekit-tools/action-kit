@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "synthetic-build-failure",
+  "eventType": "ccv2.build.completed",
+  "status": "failure",
+  "occurredAt": "2026-01-01T00:00:00Z",
+  "source": {
+    "product": "commercekit",
+    "component": "ccv2-build"
+  },
+  "context": {
+    "repository": "synthetic/example",
+    "runId": "123",
+    "runUrl": "https://github.com/synthetic/example/actions/runs/123"
+  },
+  "data": {
+    "buildCode": "synthetic-build"
+  }
+}

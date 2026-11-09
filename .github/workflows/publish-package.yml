@@ -1,0 +1,56 @@
+name: Publish package
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        type: choice
+        options: [notification-contract, ccv2-client]
+        required: true
+      channel:
+        type: choice
+        options: [preview, stable]
+        required: true
+      confirmation:
+        type: string
+        required: true
+permissions:
+  contents: read
+  packages: write
+concurrency:
+  group: action-kit-package-publication
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      SELECTED_PACKAGE: ${{ inputs.package }}
+      CHANNEL: ${{ inputs.channel }}
+      CONFIRMATION: ${{ inputs.confirmation }}
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version-file: .node-version
+          registry-url: https://npm.pkg.github.com
+          scope: '@commercekit-tools'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      # PUBLISH-COMMERCEKIT-PREVIEW / PUBLISH-COMMERCEKIT-STABLE validated by release-plan.
+      - id: plan
+        run: node scripts/release-plan.mjs
+      - name: Verify immutable version is absent
+        env:
+          VERSION: ${{ steps.plan.outputs.version }}
+        run: node scripts/verify-registry-version.mjs "$SELECTED_PACKAGE" "$VERSION" absent
+      - run: pnpm quality
+      - run: pnpm pack:check "$SELECTED_PACKAGE"
+      - name: Verify clean generated files
+        run: test -z "$(git status --porcelain)"
+      - name: Publish exactly the selected package
+        env:
+          PACKAGE_DIRECTORY: ${{ steps.plan.outputs.directory }}
+          DIST_TAG: ${{ steps.plan.outputs.tag }}
+        run: npm publish "./$PACKAGE_DIRECTORY" --tag "$DIST_TAG" --registry=https://npm.pkg.github.com
