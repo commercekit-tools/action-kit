@@ -181,3 +181,20 @@ it('redacts longer registered secrets first', () =>
   expect(api.redactKnownSecrets('long-secret short', ['short', 'long-secret'])).toBe(
     '[REDACTED] [REDACTED]',
   ));
+for (const merge of [api.mergeProducerContext, api.mergeNotifierContext])
+  it('derives missing run links from merged producer identity', () => {
+    const extracted = api.extractSafeGitHubContext({
+      GITHUB_REPOSITORY: 'synthetic/runner',
+      GITHUB_RUN_ID: '222',
+      GITHUB_SERVER_URL: 'https://github.synthetic.example',
+    });
+    expect(merge({ repository: 'synthetic/producer', runId: '111' }, extracted).runUrl).toBe(
+      'https://github.synthetic.example/synthetic/producer/actions/runs/111',
+    );
+    expect(merge({ repository: 'invalid', runId: '111' }, extracted).runUrl).toBeUndefined();
+    expect(merge({ repository: 'synthetic/producer', runId: 'invalid' }, extracted).runUrl).toBeUndefined();
+    expect(
+      merge({ repository: 'synthetic/producer', runId: undefined }, { runUrl: 'https://github.com/path' })
+        .runUrl,
+    ).toBeUndefined();
+  });

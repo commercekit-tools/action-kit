@@ -37,7 +37,17 @@ export function extractSafeGitHubContext(
 function merge(provided: NotificationContext, extracted: NotificationContext): NotificationContext {
   const result = { ...provided };
   for (const [key, value] of Object.entries(extracted))
-    if (result[key] === undefined || result[key] === '') result[key] = value;
+    if (key !== 'runUrl' && (result[key] === undefined || result[key] === '')) result[key] = value;
+  if ((result.runUrl === undefined || result.runUrl === '') && extracted.runUrl) {
+    const origin = validateGitHubRunUrl(extracted.runUrl).origin;
+    if (
+      typeof result.repository === 'string' &&
+      /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(result.repository) &&
+      typeof result.runId === 'string' &&
+      /^\d+$/.test(result.runId)
+    )
+      result.runUrl = `${origin}/${result.repository}/actions/runs/${result.runId}`;
+  }
   if (result.runUrl !== undefined) validateGitHubRunUrl(result.runUrl);
   return result;
 }
