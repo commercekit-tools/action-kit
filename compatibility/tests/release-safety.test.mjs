@@ -58,6 +58,7 @@ it('manual scripts reject invalid input before any network or mutation', () => {
     'create-package-release',
     'release-plan',
     'verify-registry-version',
+    'release-checks',
   ]) {
     const result = spawnSync(process.execPath, [`scripts/${script}.mjs`], {
       env: { ...process.env, CONFIRMATION: 'wrong', GITHUB_REF: 'refs/heads/feature' },

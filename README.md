@@ -39,3 +39,5 @@ The quality suite checks formatting, lint, TypeScript, coverage, builds, install
 See [CONTRIBUTING](CONTRIBUTING.md) for individual commands, [compatibility policy](docs/compatibility-policy.md), [migration plan](docs/migration-plan.md) and [SECURITY](SECURITY.md).
 
 Package reservation, preview/stable publication and GitHub Releases are separate manually confirmed owner workflows. Publication never runs on push or PR. [RELEASING](RELEASING.md) describes two-phase recovery and coordinated stable gates. No package or Action is published by this implementation PR.
+
+The manual publish workflow verifies the exact commit's CI/CodeQL results and publishes the tested tarball after an integrity check. A separate manual workflow verifies registry publication before creating a package-specific Git tag and GitHub Release. See [dispatch examples](RELEASING.md#dispatch-examples-after-merge-and-owner-approval). Tags do not trigger publication.

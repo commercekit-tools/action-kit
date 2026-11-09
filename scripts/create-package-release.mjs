@@ -44,22 +44,7 @@ const releases = JSON.parse(
     .join(''),
 );
 if (releases.includes(tag)) throw Error('GitHub Release already exists.');
-const checks = JSON.parse(
-  run('gh', ['api', `repos/${process.env.GITHUB_REPOSITORY}/commits/${sha}/check-runs?per_page=100`]),
-);
-for (const expected of [
-  'quality',
-  'cross-platform (ubuntu-24.04)',
-  'cross-platform (windows-2025)',
-  'cross-platform (macos-15)',
-  'analyze',
-])
-  if (
-    !checks.check_runs.some(
-      (c) => c.name === expected && c.conclusion === 'success' && c.app?.slug === 'github-actions',
-    )
-  )
-    throw Error(`Required CI check missing or unsuccessful: ${expected}`);
+run(process.execPath, ['scripts/release-checks.mjs', sha]);
 const temp = mkdtempSync(join(tmpdir(), 'commercekit-release-'));
 try {
   writeFileSync(join(temp, 'package.json'), JSON.stringify({ private: true, type: 'module' }));

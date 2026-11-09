@@ -20,7 +20,8 @@ jobs:
           node-version-file: .node-version
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
-      - run: pnpm quality
+      - name: Format, lint, typecheck, coverage, compile, pack, scan and audit
+        run: pnpm quality
   cross-platform:
     strategy:
       fail-fast: false
@@ -35,5 +36,7 @@ jobs:
           node-version-file: .node-version
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test
-      - run: pnpm pack:check
+      - name: Unit, compatibility and workflow security tests
+        run: pnpm test
+      - name: Build packages and test installed tarballs
+        run: pnpm pack:check

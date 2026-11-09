@@ -19,6 +19,7 @@ on:
 permissions:
   contents: write
   packages: read
+  checks: read
 concurrency:
   group: action-kit-package-release
   cancel-in-progress: false
@@ -42,6 +43,7 @@ jobs:
         with:
           node-version-file: .node-version
           registry-url: https://npm.pkg.github.com
+          package-manager-cache: false
           scope: '@commercekit-tools'
       - run: corepack enable
       - run: pnpm install --frozen-lockfile

@@ -24,8 +24,8 @@ for (const name of ['reserve-package-names', 'publish-package', 'create-package-
     expect(w.concurrency['cancel-in-progress']).toBe(false);
     expect(w.permissions).toEqual(
       name === 'create-package-release'
-        ? { contents: 'write', packages: 'read' }
-        : { contents: 'read', packages: 'write' },
+        ? { contents: 'write', packages: 'read', checks: 'read' }
+        : { contents: 'read', packages: 'write', ...(name === 'publish-package' ? { checks: 'read' } : {}) },
     );
     expect(JSON.stringify(w.jobs)).toContain('refs/heads/main');
   });
@@ -60,10 +60,35 @@ it('release uses package-specific immutable tags and registry verification', () 
     '${name}-v${version}',
     'verify-registry-version',
     'merge-base',
-    'check-runs',
+    'release-checks.mjs',
     '--verify-tag',
     'CHANGELOG.md',
   ])
     expect(script).toContain(value);
   expect(script).not.toMatch(/--force|npm.*publish/);
+});
+
+it('publication gates the exact commit and publishes only the tested tarball', () => {
+  const steps = workflow('publish-package').jobs.publish.steps;
+  const checkIndex = steps.findIndex((s: { run?: string }) =>
+    s.run?.includes('scripts/release-checks.mjs "$GITHUB_SHA"'),
+  );
+  const packIndex = steps.findIndex((s: { id?: string }) => s.id === 'packed');
+  const publishIndex = steps.findIndex((s: { run?: string }) => s.run?.includes('npm publish'));
+  expect(checkIndex).toBeGreaterThan(-1);
+  expect(packIndex).toBeGreaterThan(checkIndex);
+  expect(publishIndex).toBeGreaterThan(packIndex);
+  expect(steps[packIndex].run).toContain('--output-directory "$RUNNER_TEMP/commercekit-publication"');
+  expect(steps[publishIndex].env.TARBALL).toBe('${{ steps.packed.outputs.tarball }}');
+  expect(steps[publishIndex].run).toContain('sha256sum --check --status');
+  expect(steps[publishIndex].run).toContain('npm publish "$TARBALL" --ignore-scripts');
+});
+it('registry workflows disable automatic package-manager caching', () => {
+  for (const name of ['publish-package', 'create-package-release', 'reserve-package-names']) {
+    const job = Object.values(workflow(name).jobs)[0] as {
+      steps: Array<{ uses?: string; with?: Record<string, unknown> }>;
+    };
+    const setup = job.steps.find((s) => s.uses?.startsWith('actions/setup-node@'))!;
+    expect(setup.with?.['package-manager-cache']).toBe(false);
+  }
 });

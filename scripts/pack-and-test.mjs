@@ -3,10 +3,10 @@ import { tmpdir } from 'node:os';
 import { resolve, join, dirname } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { inspectTarball } from './check-package-contents.mjs';
+import { parsePackArguments, retainTestedTarball } from './pack-output.mjs';
 const root = process.cwd();
-const selected = process.argv[2];
+const { selected, directory } = parsePackArguments(process.argv.slice(2));
 const names = ['notification-contract', 'ccv2-client'];
-if (selected && !names.includes(selected)) throw Error('Unknown selected package.');
 const run = (command, args, cwd = root) => {
   const options = { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] };
   // Invoke JS CLIs with Node on every platform; never pass code or paths through a shell.
@@ -101,6 +101,8 @@ try {
     );
   }
   console.log('Packed ESM imports, schema, declarations and export boundaries passed.');
+  if (directory)
+    console.log(JSON.stringify(retainTestedTarball(tarballs[0], directory, process.env.GITHUB_OUTPUT)));
 } finally {
   rmSync(temp, { recursive: true, force: true });
 }

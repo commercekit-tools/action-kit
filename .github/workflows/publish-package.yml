@@ -16,6 +16,7 @@ on:
 permissions:
   contents: read
   packages: write
+  checks: read
 concurrency:
   group: action-kit-package-publication
   cancel-in-progress: false
@@ -35,6 +36,7 @@ jobs:
         with:
           node-version-file: .node-version
           registry-url: https://npm.pkg.github.com
+          package-manager-cache: false
           scope: '@commercekit-tools'
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
@@ -45,12 +47,22 @@ jobs:
         env:
           VERSION: ${{ steps.plan.outputs.version }}
         run: node scripts/verify-registry-version.mjs "$SELECTED_PACKAGE" "$VERSION" absent
-      - run: pnpm quality
-      - run: pnpm pack:check "$SELECTED_PACKAGE"
+      - name: Verify CI and CodeQL for this exact commit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/release-checks.mjs "$GITHUB_SHA"
+      - name: Test, typecheck, compile, scan and audit both packages
+        run: pnpm quality
+      - name: Test and retain the selected package tarball
+        id: packed
+        run: pnpm pack:check "$SELECTED_PACKAGE" --output-directory "$RUNNER_TEMP/commercekit-publication"
       - name: Verify clean generated files
         run: test -z "$(git status --porcelain)"
       - name: Publish exactly the selected package
         env:
-          PACKAGE_DIRECTORY: ${{ steps.plan.outputs.directory }}
+          TARBALL: ${{ steps.packed.outputs.tarball }}
+          TARBALL_SHA256: ${{ steps.packed.outputs.sha256 }}
           DIST_TAG: ${{ steps.plan.outputs.tag }}
-        run: npm publish "./$PACKAGE_DIRECTORY" --tag "$DIST_TAG" --registry=https://npm.pkg.github.com
+        run: |
+          printf '%s  %s\n' "$TARBALL_SHA256" "$TARBALL" | sha256sum --check --status
+          npm publish "$TARBALL" --ignore-scripts --tag "$DIST_TAG" --registry=https://npm.pkg.github.com

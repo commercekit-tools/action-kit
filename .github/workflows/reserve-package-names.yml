@@ -25,6 +25,7 @@ jobs:
         with:
           node-version-file: .node-version
           registry-url: https://npm.pkg.github.com
+          package-manager-cache: false
           scope: '@commercekit-tools'
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
