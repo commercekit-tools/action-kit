@@ -101,3 +101,9 @@ it('marks zero-major package GitHub Releases as prereleases', () => {
   const script = readFileSync('scripts/create-package-release.mjs', 'utf8');
   expect(script).toContain("version.startsWith('0.') || version.includes('-')");
 });
+
+it('release pagination uses gh-compatible JSON processing without mixing slurp and jq', () => {
+  const script = readFileSync('scripts/create-package-release.mjs', 'utf8');
+  expect(script).toContain("'--slurp'");
+  expect(script).not.toContain("'--jq'");
+});

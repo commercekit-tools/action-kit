@@ -31,18 +31,10 @@ const tag = `${name}-v${version}`;
 const tags = run('git', ['ls-remote', '--tags', 'origin', `refs/tags/${tag}`]);
 if (tags.trim()) throw Error('Package tag already exists; inspect partial release state.');
 const releases = JSON.parse(
-  run('gh', [
-    'api',
-    '--paginate',
-    '--slurp',
-    `repos/${process.env.GITHUB_REPOSITORY}/releases?per_page=100`,
-    '--jq',
-    '[.[][] | .tag_name]',
-  ])
-    .trim()
-    .split('\n')
-    .join(''),
-);
+  run('gh', ['api', '--paginate', '--slurp', `repos/${process.env.GITHUB_REPOSITORY}/releases?per_page=100`]),
+)
+  .flat()
+  .map((release) => release.tag_name);
 if (releases.includes(tag)) throw Error('GitHub Release already exists.');
 run(process.execPath, ['scripts/release-checks.mjs', sha]);
 const temp = mkdtempSync(join(tmpdir(), 'commercekit-release-'));
