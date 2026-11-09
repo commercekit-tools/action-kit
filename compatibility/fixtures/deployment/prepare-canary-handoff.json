@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "synthetic-deployment-prepare-canary-handoff",
+  "eventType": "ccv2.deployment.action-required",
+  "status": "action-required",
+  "occurredAt": "2026-01-01T00:00:00Z",
+  "source": {
+    "product": "commercekit",
+    "component": "ccv2-deploy"
+  },
+  "context": {
+    "repository": "synthetic/example",
+    "runId": "123",
+    "runUrl": "https://github.com/synthetic/example/actions/runs/123"
+  },
+  "data": {
+    "deploymentCode": "synthetic-deployment",
+    "decisionType": "PREPARE_CANARY",
+    "deploymentMode": "PREPARE_CANARY"
+  }
+}

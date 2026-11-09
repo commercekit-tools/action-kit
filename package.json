@@ -1,0 +1,34 @@
+{
+  "name": "commercekit-action-kit",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": ">=24.21.0"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "build": "pnpm -r build",
+    "pack:check": "node scripts/pack-and-test.mjs",
+    "scan:public": "node scripts/scan-public-files.mjs",
+    "audit": "pnpm audit --audit-level=high",
+    "quality": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm build && pnpm pack:check && pnpm scan:public && pnpm audit"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "vitest": "5.1.0",
+    "@vitest/coverage-v8": "5.1.0",
+    "@types/node": "24.19.2",
+    "eslint": "10.14.0",
+    "@eslint/js": "10.0.1",
+    "typescript-eslint": "8.72.1",
+    "globals": "17.13.0",
+    "prettier": "3.9.10",
+    "yaml": "2.9.1"
+  }
+}

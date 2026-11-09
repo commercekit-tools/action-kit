@@ -1,0 +1,23 @@
+{
+  "notify": {
+    "repository": "commercekit-tools/notify",
+    "commit": "015479e4340f61598d2125532acf6474381ca976",
+    "state": "main"
+  },
+  "ccv2Build": {
+    "repository": "commercekit-tools/ccv2-build",
+    "commit": "ebdc830161cf9122121ddeb137d005f375063997",
+    "state": "main"
+  },
+  "ccv2Deploy": {
+    "repository": "commercekit-tools/ccv2-deploy",
+    "commit": "85baaaa01d114473cb662e2394e752e87a8f123d",
+    "state": "open implementation PR #1",
+    "mainCommit": "1373e409e1c388a094d3f49b20aea85f26b7bd91"
+  },
+  "schema": {
+    "repository": "commercekit-tools/notify",
+    "commit": "015479e4340f61598d2125532acf6474381ca976",
+    "version": 1
+  }
+}

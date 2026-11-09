@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "synthetic-check-failure",
+  "eventType": "check.completed",
+  "status": "failure",
+  "occurredAt": "2026-01-01T00:00:00Z",
+  "source": {
+    "product": "commercekit",
+    "component": "cli-check"
+  },
+  "context": {
+    "repository": "synthetic/example",
+    "runId": "123",
+    "runUrl": "https://github.com/synthetic/example/actions/runs/123"
+  },
+  "data": {
+    "filesChecked": 3,
+    "errors": 1,
+    "warnings": 0,
+    "mode": "full"
+  }
+}
