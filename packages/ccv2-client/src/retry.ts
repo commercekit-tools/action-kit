@@ -4,6 +4,11 @@ export const defaultRuntime: RuntimeDependencies = {
   fetch: (...args) => fetch(...args),
   now: Date.now,
   sleep: async (ms, signal) => {
+    // Node otherwise clamps waits above the timer range to 1ms, violating Retry-After.
+    while (ms > 2147483647) {
+      await timer(2147483647, undefined, { signal });
+      ms -= 2147483647;
+    }
     await timer(ms, undefined, { signal });
   },
   random: Math.random,

@@ -1,4 +1,6 @@
+import { setTimeout as nodeTimer } from 'node:timers/promises';
 import { it, expect, vi } from 'vitest';
+vi.mock('node:timers/promises', { spy: true });
 import {
   TechnicalUserTokenManager,
   createCcv2Client,
@@ -444,4 +446,11 @@ it('safe transport errors have no stack, cause, raw response or request', () => 
   expect(error.cause).toBeUndefined();
   for (const key of ['raw', 'response', 'headers', 'request', 'body']) expect(error).not.toHaveProperty(key);
   expect(JSON.stringify(error)).toBe('{"code":"REQUEST_FAILED"}');
+});
+it('large Retry-After waits are chunked rather than overflowing Node timers', async () => {
+  const mock = vi.mocked(nodeTimer);
+  mock.mockClear();
+  mock.mockResolvedValueOnce(undefined).mockResolvedValueOnce(undefined);
+  await defaultRuntime.sleep(2147483648);
+  expect(mock.mock.calls.map(([ms]) => ms)).toEqual([2147483647, 1]);
 });
