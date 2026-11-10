@@ -29,8 +29,8 @@ Pin exact versions only after they are published and accessible:
 ```json
 {
   "dependencies": {
-    "@commercekit-tools/notification-contract": "0.0.1",
-    "@commercekit-tools/ccv2-client": "0.0.1"
+    "@commercekit-tools/notification-contract": "0.0.2",
+    "@commercekit-tools/ccv2-client": "0.0.2"
   }
 }
 ```
