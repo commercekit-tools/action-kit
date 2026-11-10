@@ -2,7 +2,7 @@
 
 Shared contracts and runtime libraries for CommerceKit GitHub Actions. This public repository is a pnpm monorepo, not a GitHub Marketplace Action. There is no root `action.yml`.
 
-The first integration release is `0.0.1` for both packages, distributed under the `preview` dist-tag. APIs remain pre-1.0; verify registry publication before installation. Placeholder reserved versions, if published later, are not supported dependencies.
+The current integration release is `0.0.2` for both packages, distributed under the `preview` dist-tag. APIs remain pre-1.0; verify registry publication before installation. Placeholder reserved versions, if published later, are not supported dependencies.
 
 | Package                                    | Responsibility                                                                                | Consumers                                                                      |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |

@@ -1,6 +1,6 @@
 {
   "name": "@commercekit-tools/ccv2-client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Framework-independent CCv2 technical-user authentication and safe HTTP transport.",
   "license": "MIT",
   "type": "module",

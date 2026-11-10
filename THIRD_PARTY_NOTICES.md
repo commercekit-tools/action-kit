@@ -38,7 +38,7 @@ Generated from the actual installed lockfile dependencies. Packages are not bund
 | @types/esrecurse                      | 4.3.1   | MIT              |
 | @types/estree                         | 1.0.10  | MIT              |
 | @types/json-schema                    | 7.0.15  | MIT              |
-| @types/node                           | 24.19.2 | MIT              |
+| @types/node                           | 26.6.6  | MIT              |
 | @typescript-eslint/eslint-plugin      | 8.72.1  | MIT              |
 | @typescript-eslint/parser             | 8.72.1  | MIT              |
 | @typescript-eslint/project-service    | 8.72.1  | MIT              |
@@ -93,7 +93,7 @@ Generated from the actual installed lockfile dependencies. Packages are not bund
 | flatted                               | 3.4.4   | ISC              |
 | fsevents                              | 2.3.3   | MIT              |
 | glob-parent                           | 6.0.2   | ISC              |
-| globals                               | 17.13.0 | MIT              |
+| globals                               | 17.14.0 | MIT              |
 | hashery                               | 1.5.1   | MIT              |
 | hookified                             | 1.15.1  | MIT              |
 | hookified                             | 2.2.0   | MIT              |
@@ -146,7 +146,7 @@ Generated from the actual installed lockfile dependencies. Packages are not bund
 | type-check                            | 0.4.0   | MIT              |
 | typescript                            | 6.0.3   | Apache-2.0       |
 | typescript-eslint                     | 8.72.1  | MIT              |
-| undici-types                          | 7.24.6  | MIT              |
+| undici-types                          | 8.9.0   | MIT              |
 | uri-js                                | 4.4.1   | BSD-2-Clause     |
 | vite                                  | 8.3.6   | MIT              |
 | vitest                                | 5.1.0   | MIT              |
