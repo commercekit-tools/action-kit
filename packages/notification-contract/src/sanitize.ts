@@ -1,3 +1,24 @@
+/**
+ * Discard angle brackets and text between them, including an unclosed suffix.
+ * This preserves the Actions' conservative text filter; it is not an HTML parser
+ * or an HTML sanitizer. Callers still own output escaping and disclosure policy.
+ */
+export function stripAngleBracketText(value: string): string {
+  let inside = false;
+  let output = '';
+  for (const character of value) {
+    if (character === '<') inside = true;
+    else if (character === '>') inside = false;
+    else if (!inside) output += character;
+  }
+  return output;
+}
+
+/** Redact the JWT-like shape recognized by Build/Deploy; no token verification. */
+export function redactJwtLikeTokens(value: string): string {
+  return value.replace(/eyJ[\w-]+\.[\w-]+\.[\w-]+/g, '[REDACTED]');
+}
+
 export function redactKnownSecrets(value: string, secrets: readonly string[] = []): string {
   for (const secret of [...secrets].filter(Boolean).sort((a, b) => b.length - a.length)) {
     for (const form of new Set([

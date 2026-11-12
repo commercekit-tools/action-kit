@@ -57,18 +57,18 @@ try {
   const types = [];
   if (!selected || selected === 'notification-contract') {
     smoke.push(
-      `import {createCheckEvent,validateNotificationEvent} from '@commercekit-tools/notification-contract'; import schema from '@commercekit-tools/notification-contract/schema' with {type:'json'}; if(schema.properties.schemaVersion.const!==1)throw Error('Schema export'); validateNotificationEvent(createCheckEvent({status:'success',data:{filesChecked:1,errors:0,warnings:0}}));`,
+      `import {createCheckEvent,validateNotificationEvent,stripAngleBracketText,redactJwtLikeTokens} from '@commercekit-tools/notification-contract'; import schema from '@commercekit-tools/notification-contract/schema' with {type:'json'}; if(stripAngleBracketText('a<b>c')!=='ac'||redactJwtLikeTokens('eyJheader.payload.signature')!=='[REDACTED]')throw Error('Packed text primitives'); if(schema.properties.schemaVersion.const!==1)throw Error('Schema export'); validateNotificationEvent(createCheckEvent({status:'success',data:{filesChecked:1,errors:0,warnings:0}}));`,
     );
     types.push(
-      `import {createCheckEvent,type NotificationEvent} from '@commercekit-tools/notification-contract'; const event:NotificationEvent=createCheckEvent({status:'success',data:{filesChecked:1,errors:0,warnings:0}}); void event;`,
+      `import {createCheckEvent,stripAngleBracketText,redactJwtLikeTokens,type NotificationEvent} from '@commercekit-tools/notification-contract'; const event:NotificationEvent=createCheckEvent({status:'success',data:{filesChecked:1,errors:0,warnings:0}}); void event; const text:string=stripAngleBracketText(redactJwtLikeTokens('synthetic'));void text;`,
     );
   }
   if (!selected || selected === 'ccv2-client') {
     smoke.push(
-      `import {createCcv2Client} from '@commercekit-tools/ccv2-client'; const client=createCcv2Client({baseUrl:'https://synthetic.example/',tokens:{get:async()=> 'synthetic',invalidate(){}},runtime:{fetch:async()=>new Response('[1]',{headers:{'content-type':'application/json'}})}}); const result=await client.request('test',{policy:'safe-read'}); if(result.body.kind!=='json'||!Array.isArray(result.body.value))throw Error('Packed transport');`,
+      `import {createCcv2Client,encodeCcv2PathSegment} from '@commercekit-tools/ccv2-client'; if(encodeCcv2PathSegment('synthetic id')!=='synthetic%20id')throw Error('Packed path primitive'); const client=createCcv2Client({baseUrl:'https://synthetic.example/',tokens:{get:async()=> 'synthetic',invalidate(){}},runtime:{fetch:async()=>new Response('[1]',{headers:{'content-type':'application/json'}})}}); const result=await client.request('test',{policy:'safe-read'}); if(result.body.kind!=='json'||!Array.isArray(result.body.value))throw Error('Packed transport');`,
     );
     types.push(
-      `import {createCcv2Client,type Ccv2Response} from '@commercekit-tools/ccv2-client'; const client=createCcv2Client({baseUrl:'https://synthetic.example/',tokens:{get:async()=> 'synthetic',invalidate(){}}}); const response:Promise<Ccv2Response>=client.request('path',{policy:'unsafe-mutation'});void response; // compile only`,
+      `import {createCcv2Client,encodeCcv2PathSegment,type Ccv2Response} from '@commercekit-tools/ccv2-client'; const client=createCcv2Client({baseUrl:'https://synthetic.example/',tokens:{get:async()=> 'synthetic',invalidate(){}}}); const response:Promise<Ccv2Response>=client.request('path',{policy:'unsafe-mutation'});void response;const segment:string=encodeCcv2PathSegment('synthetic');void segment; // compile only`,
     );
   }
   writeFileSync(join(temp, 'smoke.mjs'), smoke.join('\n'));
