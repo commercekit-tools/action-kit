@@ -32,7 +32,7 @@ The new exports are additive and **unreleased**. Existing sanitizer entry points
 
 `stripAngleBracketText` matches the existing conservative character filter, including nested/unclosed markup behavior. It is neither an HTML parser nor a complete HTML sanitizer: script contents, entity text and mentions still need the owning renderer's policy. `redactJwtLikeTokens` recognizes the existing `eyJ...` three-segment shape without verifying tokens or promising exhaustive secret detection. CodeQL identified quadratic behavior in the original regex on repeated `eyJ` prefixes. The new primitive uses a linear word-run scan, verified against the original expression on bounded synthetic combinations and against long adversarial inputs.
 
-`encodeCcv2PathSegment` rejects invalid raw segments and malformed Unicode with fixed `Ccv2TransportError('INVALID_URL')` diagnostics. It preserves percent signs as literal input (`%2F` becomes `%252F`), does not trim accepted values and does not assemble endpoint paths. Existing consumers reject malformed Unicode too, although they currently expose an internal URIError before Action-level handling.
+`encodeCcv2PathSegment` rejects invalid raw segments with fixed `Ccv2TransportError('INVALID_URL')` diagnostics and malformed Unicode with `INVALID_PATH_ENCODING`. It preserves percent signs as literal input (`%2F` becomes `%252F`), does not trim accepted values and does not assemble endpoint paths. Existing consumers reject malformed Unicode too, although they currently expose an internal URIError before Action-level handling.
 
 ## Compatibility evidence
 

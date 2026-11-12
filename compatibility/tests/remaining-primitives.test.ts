@@ -69,8 +69,9 @@ describe('CCv2 path segment compatibility', () => {
         try {
           encodeCcv2PathSegment(fixture.value);
         } catch (error) {
-          expect((error as Ccv2TransportError).toJSON()).toEqual({ code: 'INVALID_URL' });
-          expect((error as Error).message).toBe('CCv2 transport: INVALID_URL.');
+          const code = ['\ud800', '\udc00'].includes(fixture.value) ? 'INVALID_PATH_ENCODING' : 'INVALID_URL';
+          expect((error as Ccv2TransportError).toJSON()).toEqual({ code });
+          expect((error as Error).message).toBe(`CCv2 transport: ${code}.`);
           expect((error as Error).stack).toBeUndefined();
         }
       }
