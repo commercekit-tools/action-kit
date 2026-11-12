@@ -7,7 +7,7 @@ import { join } from 'node:path';
 it('publication requires exact package/channel/confirmation and pre-1.0 version', () => {
   for (const name of ['notification-contract', 'ccv2-client'])
     expect(releasePlan(name, 'preview', 'PUBLISH-COMMERCEKIT-PREVIEW')).toMatchObject({
-      version: '0.0.2',
+      version: '0.0.3',
       tag: 'preview',
     });
   for (const args of [
