@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-Add `encodeCcv2PathSegment` for the existing Build/Deploy raw identifier policy, with fixed non-disclosing errors. Existing URL validators and request policies are unchanged. These exports are not available in published 0.0.2; a new package release and separate consumer migrations are required.
+Add `encodeCcv2PathSegment` for the existing Build/Deploy raw identifier policy, with fixed non-disclosing errors and a distinct `INVALID_PATH_ENCODING` code for malformed Unicode so Action adapters can preserve existing diagnostics. Existing URL validators and request policies are unchanged. These exports are not available in published 0.0.2; a new package release and separate consumer migrations are required.
 
 ## 0.0.2
 

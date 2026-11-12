@@ -12,9 +12,9 @@ export function encodeCcv2PathSegment(value: string): string {
     )
       throw Error();
     return encodeURIComponent(value);
-  } catch {
+  } catch (error) {
     // Includes malformed Unicode; never expose the raw identifier in diagnostics.
-    throw new Ccv2TransportError('INVALID_URL');
+    throw new Ccv2TransportError(error instanceof URIError ? 'INVALID_PATH_ENCODING' : 'INVALID_URL');
   }
 }
 

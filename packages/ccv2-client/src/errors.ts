@@ -2,6 +2,7 @@ import { redactTransportText } from './security.js';
 import type { Ccv2Problem } from './types.js';
 export type TransportErrorCode =
   | 'INVALID_URL'
+  | 'INVALID_PATH_ENCODING'
   | 'INVALID_OPTIONS'
   | 'INVALID_TOKEN'
   | 'REQUEST_FAILED'
