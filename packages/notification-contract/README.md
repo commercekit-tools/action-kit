@@ -22,13 +22,13 @@ Extraction reads only approved runner fields, never event payloads. Explicit pro
 
 Install from GitHub Packages after a supported version is published. Configure `@commercekit-tools:registry=https://npm.pkg.github.com`; local users need a classic PAT with `read:packages` in user-level configuration. Consumer Actions need package Actions read access and `GITHUB_TOKEN` with `packages: read`. See the repository authentication guide. Pin exact versions, never ranges.
 
-Current release: source version `0.0.2`, an initial pre-1.0 integration release under the `preview` dist-tag. Verify registry availability before installation and pin `0.0.2` exactly. Stable API and coordinated consumer/Sandbox validation remain future gates. Reservation versions are unsupported.
+Source version: `0.0.3`, prepared for pre-1.0 integration under the `preview` dist-tag. This manifest is not publication evidence. Verify registry availability before installation and pin `0.0.3` exactly. Stable API and coordinated consumer/Sandbox validation remain future gates. Reservation versions are unsupported.
 
 Independent package SemVer applies; stable breaking changes require a major increment. NotificationEvent schema version is separate from package version. Preserve current consumer contracts during migration. No telemetry or logging is performed. Use synthetic tests and register exact runtime secrets; pattern redaction cannot identify all secrets.
 
-## Unreleased text primitives
+## Text primitives added in 0.0.3
 
-The next reviewed release adds `stripAngleBracketText(value: string): string` and `redactJwtLikeTokens(value: string): string` at the public root. They are **not available in published 0.0.2**.
+Version 0.0.3 adds `stripAngleBracketText(value: string): string` and `redactJwtLikeTokens(value: string): string` at the public root. They are **not available in published 0.0.2**.
 
 The first removes angle brackets and all text between each opening bracket and the next closing bracket, discarding an unclosed suffix. It neither parses HTML nor removes script text or decodes entities. The second replaces the existing Build/Deploy `eyJ`-prefixed three-segment token shape with `[REDACTED]`; it does not verify tokens or detect every credential. Both preserve unrelated characters and impose no length bound.
 
