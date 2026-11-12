@@ -77,3 +77,21 @@ describe('CCv2 path segment compatibility', () => {
     });
   });
 });
+
+// The original expression is used only on bounded synthetic samples as a
+// compatibility oracle. Never run it on the adversarial long input below.
+it('preserves JWT-like match boundaries across bounded combinations', () => {
+  const fragments = ['', 'eyJ', 'eyJa', 'xeyJb', 'word', '.', '..', '/', ' ', '-', '_', 'é'];
+  for (const a of fragments)
+    for (const b of fragments)
+      for (const c of fragments) {
+        const value = `${a}${b}.${c}.eyJmore.payload.signature;eyJlast.a.b`;
+        expect(redactJwtLikeTokens(value)).toBe(value.replace(/eyJ[\w-]+\.[\w-]+\.[\w-]+/g, '[REDACTED]'));
+      }
+});
+it('handles long overlapping JWT prefixes without backtracking', () => {
+  const prefix = 'eyJ'.repeat(50_000);
+  expect(redactJwtLikeTokens(prefix)).toBe(prefix);
+  expect(redactJwtLikeTokens(`${prefix}.payload`)).toBe(`${prefix}.payload`);
+  expect(redactJwtLikeTokens(`${prefix}.payload.signature`)).toBe('[REDACTED]');
+});
