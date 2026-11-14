@@ -1,12 +1,12 @@
 # Owner release procedure
 
-Nothing is published by a feature PR or ordinary CI. Package versions are immutable. Never force, delete, overwrite or republish a version. All workflows run from main and use GITHUB_TOKEN; review the selected commit, changelog and external gates first.
+Nothing is published by a feature PR or ordinary CI. Package versions are immutable. Never force, delete, overwrite or republish a version. All workflows run from main and use GITHUB_TOKEN; review the selected commit, changelog and external gates first. Complete the [release configuration checklist](docs/github-packages.md) for Actions permissions, package access and consumer authentication; no custom publishing secret is required.
 
 1. Merge implementation PR after approval.
 2. Verify main CI and CodeQL.
 3. Optionally dispatch `reserve-package-names` with confirmation `RESERVE-COMMERCEKIT-PACKAGES`. It publishes only temporary unsupported `0.0.0-reserved.1` packages under `reserved`, never source implementations or `preview`/`latest`. Both versions are checked absent before publishing. If one succeeds and the second fails, stop for owner review rather than bypassing immutability checks.
-4. Configure public visibility, repository association and Actions read access as documented in `docs/github-packages.md`.
-5. Prepare a selected-package version/changelog PR. Source manifests currently express intended `0.0.2`, not publication evidence.
+4. Configure public visibility, repository association and Actions read access using the [package access checklist](docs/github-packages.md#package-access).
+5. Prepare a selected-package version/changelog PR. Source manifests currently prepare `0.0.3` for both packages; the last verified publication is `0.0.2`. Source versions are not publication evidence.
 6. Merge the reviewed version PR.
 7. Dispatch `publish-package`: package `notification-contract` or `ccv2-client`, channel `preview` or `stable`, exact confirmation `PUBLISH-COMMERCEKIT-PREVIEW` or `PUBLISH-COMMERCEKIT-STABLE`. Preview accepts nonzero `0.x.y` initial releases (including `0.0.1`) or `0.x.y-preview.n`; stable requires 1.0.0 or later without prerelease. The workflow checks version absence and successful CI/CodeQL for the exact main commit, runs full quality and the selected pack/install checks, and verifies clean generated files. It retains the tested tarball in runner temporary storage, verifies its SHA-256 immediately before publication, and publishes those exact bytes with `preview` or `latest` and lifecycle scripts disabled. No source-directory repack or artifact upload is involved.
 8. Verify the exact package version in GitHub Packages and its visibility/access.
@@ -35,10 +35,10 @@ Wait for publication success and verify the exact registry version before the se
 
 ```sh
 gh workflow run create-package-release.yml --ref main \
-  -f package=notification-contract -f version=0.0.2 \
+  -f package=notification-contract -f version=0.0.3 \
   -f confirmation=CREATE-COMMERCEKIT-PACKAGE-RELEASE
 ```
 
-This creates `notification-contract-v0.0.2`; selecting ccv2-client creates its independent `ccv2-client-v<version>` tag. Stable publication uses channel `stable`, a reviewed stable manifest version and confirmation `PUBLISH-COMMERCEKIT-STABLE`.
+This creates `notification-contract-v0.0.3`; selecting ccv2-client creates its independent `ccv2-client-v<version>` tag. Stable publication uses channel `stable`, a reviewed stable manifest version and confirmation `PUBLISH-COMMERCEKIT-STABLE`.
 
 Tags are an output of the verified release phase, not a publication trigger. This keeps failed publication from creating a misleading release tag and avoids relying on a token-created tag to trigger another workflow. Both release phases require explicit dispatch. The publish and Release jobs have `checks: read` to verify commit check results and `security-events: read` to verify exact-commit main CodeQL analyses and the absence of open alerts; CI remains read-only and publication has no contents-write permission.
