@@ -1,5 +1,9 @@
 # notification-contract changelog
 
+## Unreleased
+
+Add opt-in `stripAngleBracketText` and `redactJwtLikeTokens` primitives extracted from Build/Deploy. JWT-shaped redaction uses a linear word-run scan to avoid the copied regex's quadratic behavior on repeated prefixes. Existing sanitizers, redaction order, event factories and schema are unchanged. These exports are not available in published 0.0.2; a new package release and separate consumer migrations are required.
+
 ## 0.0.2
 
 Maintenance release following Dependabot updates to globals 17.14.0 and @types/node 26.6.6 (including undici-types 8.9.0). Refresh dependency notices and release metadata. Runtime JavaScript, declarations and the NotificationEvent v1 schema are unchanged; validation continues on Node 24.21.0. Includes the verified package Release pagination fix in repository tooling.

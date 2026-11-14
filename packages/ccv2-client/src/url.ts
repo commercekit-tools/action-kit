@@ -1,4 +1,23 @@
 import { Ccv2TransportError } from './errors.js';
+
+/** Encode a raw CCv2 identifier once, preserving Build/Deploy's segment policy. */
+export function encodeCcv2PathSegment(value: string): string {
+  try {
+    if (
+      !value.trim() ||
+      value.length > 128 ||
+      /[/?#\\\u0000-\u001f\u007f-\u009f]/.test(value) ||
+      value === '.' ||
+      value === '..'
+    )
+      throw Error();
+    return encodeURIComponent(value);
+  } catch (error) {
+    // Includes malformed Unicode; never expose the raw identifier in diagnostics.
+    throw new Ccv2TransportError(error instanceof URIError ? 'INVALID_PATH_ENCODING' : 'INVALID_URL');
+  }
+}
+
 function https(value: string): URL {
   try {
     if (value.length > 2048 || /[\s\\?#\u0000-\u001f\u007f-\u009f]/.test(value)) throw Error();

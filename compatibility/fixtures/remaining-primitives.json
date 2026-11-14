@@ -1,0 +1,466 @@
+{
+  "text": [
+    {
+      "value": "",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 5,
+      "build": "",
+      "deploy": ""
+    },
+    {
+      "value": "ordinary text",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "ordinary text",
+      "deploy": "ordinary text"
+    },
+    {
+      "value": "a<b>c",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "ac",
+      "deploy": "ac"
+    },
+    {
+      "value": "<b>bold</b>",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 5,
+      "build": "bold",
+      "deploy": "bold"
+    },
+    {
+      "value": "a<unclosed secret",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "a",
+      "deploy": "a"
+    },
+    {
+      "value": "a<<b>c>d",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "acd",
+      "deploy": "acd"
+    },
+    {
+      "value": "a>b",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 5,
+      "build": "ab",
+      "deploy": "ab"
+    },
+    {
+      "value": "<script>alert(1)</script>",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "alert(1)",
+      "deploy": "alert(1)"
+    },
+    {
+      "value": "&lt;b&gt;",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "&lt;b&gt;",
+      "deploy": "&lt;b&gt;"
+    },
+    {
+      "value": "eyJheader.payload.signature",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 5,
+      "build": "[REDA",
+      "deploy": "[REDA"
+    },
+    {
+      "value": "eyJfirst.a.b eyJsecond.c.d",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "[REDACTED] [REDACTED]",
+      "deploy": "[REDACTED] [REDACTED]"
+    },
+    {
+      "value": "eyJ.a.b",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "eyJ.a.b",
+      "deploy": "eyJ.a.b"
+    },
+    {
+      "value": "prefixeyJabc.def.ghiSuffix",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 5,
+      "build": "prefi",
+      "deploy": "prefi"
+    },
+    {
+      "value": "Bearer eyJheader.payload.signature",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "[REDACTED]",
+      "deploy": "[REDACTED]"
+    },
+    {
+      "value": "https://example.invalid/<tag>suffix",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "[URL]",
+      "deploy": "[URL]"
+    },
+    {
+      "value": "Authorization: <hidden> value",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 5,
+      "build": "[REDA",
+      "deploy": "[REDA"
+    },
+    {
+      "value": "token=synthetic-secret&tail",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "[REDACTED]&tail",
+      "deploy": "[REDACTED]&tail"
+    },
+    {
+      "value": "synthetic secret synthetic%20secret synthetic+secret",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "[REDACTED] [REDACTED] [REDACTED]",
+      "deploy": "[REDACTED] [REDACTED] [REDACTED]"
+    },
+    {
+      "value": "synthetic-secret synthetic",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 5,
+      "build": "[REDA",
+      "deploy": "[REDA"
+    },
+    {
+      "value": "a\u0000bc\n d",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "a b c  d",
+      "deploy": "a b c  d"
+    },
+    {
+      "value": "message at function(file:1)",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "message",
+      "deploy": "message"
+    },
+    {
+      "value": "   ",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 5,
+      "build": "",
+      "deploy": ""
+    },
+    {
+      "value": "🙂<tag>text",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "🙂text",
+      "deploy": "🙂text"
+    },
+    {
+      "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<tag>",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 1000,
+      "build": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "deploy": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "value": "<xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>visible",
+      "secrets": ["synthetic-secret", "synthetic", "synthetic secret"],
+      "max": 5,
+      "build": "visib",
+      "deploy": ""
+    }
+  ],
+  "paths": [
+    {
+      "value": "build.123",
+      "build": {
+        "accepted": true,
+        "encoded": "build.123"
+      },
+      "deploy": {
+        "accepted": true,
+        "encoded": "build.123"
+      }
+    },
+    {
+      "value": " leading space ",
+      "build": {
+        "accepted": true,
+        "encoded": "%20leading%20space%20"
+      },
+      "deploy": {
+        "accepted": true,
+        "encoded": "%20leading%20space%20"
+      }
+    },
+    {
+      "value": "a b",
+      "build": {
+        "accepted": true,
+        "encoded": "a%20b"
+      },
+      "deploy": {
+        "accepted": true,
+        "encoded": "a%20b"
+      }
+    },
+    {
+      "value": "café",
+      "build": {
+        "accepted": true,
+        "encoded": "caf%C3%A9"
+      },
+      "deploy": {
+        "accepted": true,
+        "encoded": "caf%C3%A9"
+      }
+    },
+    {
+      "value": "🙂",
+      "build": {
+        "accepted": true,
+        "encoded": "%F0%9F%99%82"
+      },
+      "deploy": {
+        "accepted": true,
+        "encoded": "%F0%9F%99%82"
+      }
+    },
+    {
+      "value": "%2F",
+      "build": {
+        "accepted": true,
+        "encoded": "%252F"
+      },
+      "deploy": {
+        "accepted": true,
+        "encoded": "%252F"
+      }
+    },
+    {
+      "value": "a%2fb",
+      "build": {
+        "accepted": true,
+        "encoded": "a%252fb"
+      },
+      "deploy": {
+        "accepted": true,
+        "encoded": "a%252fb"
+      }
+    },
+    {
+      "value": "a:b",
+      "build": {
+        "accepted": true,
+        "encoded": "a%3Ab"
+      },
+      "deploy": {
+        "accepted": true,
+        "encoded": "a%3Ab"
+      }
+    },
+    {
+      "value": "a!b",
+      "build": {
+        "accepted": true,
+        "encoded": "a!b"
+      },
+      "deploy": {
+        "accepted": true,
+        "encoded": "a!b"
+      }
+    },
+    {
+      "value": "a'b",
+      "build": {
+        "accepted": true,
+        "encoded": "a'b"
+      },
+      "deploy": {
+        "accepted": true,
+        "encoded": "a'b"
+      }
+    },
+    {
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "build": {
+        "accepted": true,
+        "encoded": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "deploy": {
+        "accepted": true,
+        "encoded": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    {
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": " ",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "/",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "a/b",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "a?b",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "a#b",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "a\\b",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": ".",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "..",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "...",
+      "build": {
+        "accepted": true,
+        "encoded": "..."
+      },
+      "deploy": {
+        "accepted": true,
+        "encoded": "..."
+      }
+    },
+    {
+      "value": "x\u0000y",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "x\u001fy",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "xy",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "xy",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "xy",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "\ud800",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    },
+    {
+      "value": "\udc00",
+      "build": {
+        "accepted": false
+      },
+      "deploy": {
+        "accepted": false
+      }
+    }
+  ]
+}

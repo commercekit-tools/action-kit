@@ -1,5 +1,9 @@
 # ccv2-client changelog
 
+## Unreleased
+
+Add `encodeCcv2PathSegment` for the existing Build/Deploy raw identifier policy, with fixed non-disclosing errors and a distinct `INVALID_PATH_ENCODING` code for malformed Unicode so Action adapters can preserve existing diagnostics. Existing URL validators and request policies are unchanged. These exports are not available in published 0.0.2; a new package release and separate consumer migrations are required.
+
 ## 0.0.2
 
 Maintenance release following Dependabot updates to globals 17.14.0 and @types/node 26.6.6 (including undici-types 8.9.0). Refresh dependency notices and release metadata. Runtime JavaScript, declarations and the NotificationEvent v1 schema are unchanged; validation continues on Node 24.21.0. Includes the verified package Release pagination fix in repository tooling.

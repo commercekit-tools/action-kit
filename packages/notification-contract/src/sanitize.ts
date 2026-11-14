@@ -1,3 +1,51 @@
+/**
+ * Discard angle brackets and text between them, including an unclosed suffix.
+ * This preserves the Actions' conservative text filter; it is not an HTML parser
+ * or an HTML sanitizer. Callers still own output escaping and disclosure policy.
+ */
+export function stripAngleBracketText(value: string): string {
+  let inside = false;
+  let output = '';
+  for (const character of value) {
+    if (character === '<') inside = true;
+    else if (character === '>') inside = false;
+    else if (!inside) output += character;
+  }
+  return output;
+}
+
+/** Redact the JWT-like shape recognized by Build/Deploy; no token verification. */
+export function redactJwtLikeTokens(value: string): string {
+  // Scan maximal word runs once. A regex that searches for eyJ followed by an
+  // unbounded word suffix can retry overlapping prefixes quadratically.
+  const pending: { text: string; start: number; end: number }[] = [];
+  let output = '';
+  let consumed = 0;
+  for (const match of value.matchAll(/[\w-]+/g)) {
+    pending.push({ text: match[0], start: match.index, end: match.index + match[0].length });
+    if (pending.length < 3) continue;
+    const first = pending[0]!,
+      second = pending[1]!,
+      third = pending[2]!;
+    const prefix = first.text.indexOf('eyJ');
+    if (
+      prefix >= 0 &&
+      prefix + 3 < first.text.length &&
+      first.end + 1 === second.start &&
+      value[first.end] === '.' &&
+      second.end + 1 === third.start &&
+      value[second.end] === '.'
+    ) {
+      output += value.slice(consumed, first.start + prefix) + '[REDACTED]';
+      consumed = third.end;
+      pending.length = 0;
+    } else {
+      pending.shift();
+    }
+  }
+  return output + value.slice(consumed);
+}
+
 export function redactKnownSecrets(value: string, secrets: readonly string[] = []): string {
   for (const secret of [...secrets].filter(Boolean).sort((a, b) => b.length - a.length)) {
     for (const form of new Set([

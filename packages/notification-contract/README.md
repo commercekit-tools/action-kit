@@ -25,3 +25,11 @@ Install from GitHub Packages after a supported version is published. Configure `
 Current release: source version `0.0.2`, an initial pre-1.0 integration release under the `preview` dist-tag. Verify registry availability before installation and pin `0.0.2` exactly. Stable API and coordinated consumer/Sandbox validation remain future gates. Reservation versions are unsupported.
 
 Independent package SemVer applies; stable breaking changes require a major increment. NotificationEvent schema version is separate from package version. Preserve current consumer contracts during migration. No telemetry or logging is performed. Use synthetic tests and register exact runtime secrets; pattern redaction cannot identify all secrets.
+
+## Unreleased text primitives
+
+The next reviewed release adds `stripAngleBracketText(value: string): string` and `redactJwtLikeTokens(value: string): string` at the public root. They are **not available in published 0.0.2**.
+
+The first removes angle brackets and all text between each opening bracket and the next closing bracket, discarding an unclosed suffix. It neither parses HTML nor removes script text or decodes entities. The second replaces the existing Build/Deploy `eyJ`-prefixed three-segment token shape with `[REDACTED]`; it does not verify tokens or detect every credential. Both preserve unrelated characters and impose no length bound.
+
+These are opt-in primitives: existing sanitizers/factories do not call them automatically. Consumers retain secret registration, ordering, text bounds, fallback labels and provider escaping. See the [remaining extraction audit](../../docs/remaining-extraction-audit.md) for compatibility evidence and rollout.
