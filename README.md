@@ -2,7 +2,7 @@
 
 Shared contracts and runtime libraries for CommerceKit GitHub Actions. This public repository is a pnpm monorepo, not a GitHub Marketplace Action. There is no root `action.yml`.
 
-The current integration release is `0.0.2` for both packages, distributed under the `preview` dist-tag. APIs remain pre-1.0; verify registry publication before installation. Placeholder reserved versions, if published later, are not supported dependencies.
+The source manifests prepare `0.0.3` for both packages under the `preview` dist-tag; the last verified publication is `0.0.2`. APIs remain pre-1.0; verify registry publication before installation. Placeholder reserved versions, if published later, are not supported dependencies.
 
 | Package                                    | Responsibility                                                                                | Consumers                                                                      |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
@@ -24,7 +24,7 @@ flowchart LR
 
 Provider rendering and delivery, Action inputs/outputs, summaries, lifecycle state machines and endpoint-specific validation remain in consumers. See [architecture](docs/architecture.md), the original [extraction audit](docs/extraction-audit.md), and the current [remaining extraction audit](docs/remaining-extraction-audit.md).
 
-Installation requires GitHub Packages access, including for public packages. Configure the scope registry and credentials using [the authentication guide](docs/github-packages.md). Consumers must pin exact supported versions. The source manifests contain intended first preview versions; this is not evidence of publication.
+Installation requires GitHub Packages access, including for public packages. Configure the scope registry and credentials using [the release configuration and authentication guide](docs/github-packages.md). Consumers must pin exact supported versions. The source manifests contain prepared preview versions; this is not evidence of publication.
 
 Develop with Node **24.21.0** and pnpm **12.6.0**:
 

@@ -28,7 +28,7 @@ Compared current remote main and clean local consumer branches on 2026-11-11. Th
 
 ## First implementation
 
-The new exports are additive and **unreleased**. Existing sanitizer entry points, URL validators, schema, package dependencies and package versions are unchanged. Neither package gains an Actions SDK dependency or a dependency on the other. The two text filters do not automatically run inside existing sanitizers or factories.
+The new exports are additive and **unreleased**. Both package manifests prepare preview `0.0.3`; existing sanitizer entry points, URL validators, schema and dependency versions are unchanged. Neither package gains an Actions SDK dependency or a dependency on the other. The two text filters do not automatically run inside existing sanitizers or factories.
 
 `stripAngleBracketText` matches the existing conservative character filter, including nested/unclosed markup behavior. It is neither an HTML parser nor a complete HTML sanitizer: script contents, entity text and mentions still need the owning renderer's policy. `redactJwtLikeTokens` recognizes the existing `eyJ...` three-segment shape without verifying tokens or promising exhaustive secret detection. CodeQL identified quadratic behavior in the original regex on repeated `eyJ` prefixes. The new primitive uses a linear word-run scan, verified against the original expression on bounded synthetic combinations and against long adversarial inputs.
 
@@ -49,10 +49,10 @@ The new compatibility test recreates only the small proposed compositions from p
 
 ## Consumer rollout after package publication
 
-1. Review this additive API change and run Action Kit quality/CI/CodeQL. Select new package versions in a separate release change; never overwrite published 0.0.2.
+1. Review this additive API change and run Action Kit quality/CI/CodeQL. Both packages prepare `0.0.3`; follow the [release procedure](../RELEASING.md) and never overwrite published 0.0.2.
 2. Publish the reviewed packages through the existing owner-controlled preview workflow. Do not use local links, git dependencies, tarballs or copied source as Action dependencies.
 3. Create focused Build and Deploy migrations pinning the published versions. Keep `textInput(value, 'path identifier', 128)` for established input diagnostics, delegate encoding to `encodeCcv2PathSegment`, and translate shared validation failures to the existing local error. Preserve malformed-Unicode failure classification during that adapter change.
 4. Replace each private angle-bracket loop and JWT regex with the new functions at the same positions in the existing compositions. Do not combine or reorder Build and Deploy sanitizers. Keep masking, empty-text behavior and summary escaping local.
-5. Run full consumer tests, cross-repository event/render checks, bundle reproducibility, offline standalone-bundle tests and CI/CodeQL before merging consumer changes. Notify has no required migration for this first extraction.
+5. Run full consumer tests, cross-repository event/render checks, bundle reproducibility, offline standalone-bundle tests and CI/CodeQL before merging consumer changes. Notify needs only an exact contract-version update for this extraction; its sanitizer and retry policy remain local.
 
 This PR publishes nothing, creates no tags/releases, changes no consumer dependency and calls no live providers or Sandbox services. Duplication is removed from consumer source only in the subsequent migrations after publication.

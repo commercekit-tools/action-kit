@@ -1,8 +1,8 @@
 # notification-contract changelog
 
-## Unreleased
+## 0.0.3
 
-Add opt-in `stripAngleBracketText` and `redactJwtLikeTokens` primitives extracted from Build/Deploy. JWT-shaped redaction uses a linear word-run scan to avoid the copied regex's quadratic behavior on repeated prefixes. Existing sanitizers, redaction order, event factories and schema are unchanged. These exports are not available in published 0.0.2; a new package release and separate consumer migrations are required.
+Add opt-in `stripAngleBracketText` and `redactJwtLikeTokens` primitives extracted from Build/Deploy. JWT-shaped redaction uses a linear word-run scan to avoid the copied regex's quadratic behavior on repeated prefixes. Existing sanitizers, redaction order, event factories and schema are unchanged. Prepared for preview publication; consumer migrations must verify registry availability before installation.
 
 ## 0.0.2
 

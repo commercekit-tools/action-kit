@@ -36,12 +36,12 @@ Inject fetch, clock, abortable sleep, random and secret masking through `runtime
 
 Install from GitHub Packages after a supported version is published. Configure `@commercekit-tools:registry=https://npm.pkg.github.com`; local users need a classic PAT with `read:packages` in user-level configuration. Consumer Actions need package Actions read access and `GITHUB_TOKEN` with `packages: read`. See the repository authentication guide. Pin exact versions, never ranges.
 
-Current release: source version `0.0.2`, an initial pre-1.0 integration release under the `preview` dist-tag. Verify registry availability before installation and pin `0.0.2` exactly. Stable API and coordinated consumer/Sandbox validation remain future gates. Reservation versions are unsupported.
+Source version: `0.0.3`, prepared for pre-1.0 integration under the `preview` dist-tag. This manifest is not publication evidence. Verify registry availability before installation and pin `0.0.3` exactly. Stable API and coordinated consumer/Sandbox validation remain future gates. Reservation versions are unsupported.
 
 Independent package SemVer applies; stable breaking changes require a major increment. NotificationEvent schema version is separate from package version. Preserve current consumer contracts during migration. No telemetry or logging is performed. Use synthetic tests and register exact runtime secrets; pattern redaction cannot identify all secrets.
 
-## Unreleased path primitive
+## Path primitive added in 0.0.3
 
-The next reviewed release adds `encodeCcv2PathSegment(value: string): string` at the public root. It is **not available in published 0.0.2**. Pass a raw CCv2 identifier, not an already encoded segment. The helper rejects blank values, more than 128 UTF-16 code units, C0/C1 controls, slash/backslash/query/fragment delimiters, exact `.`/`..`, and malformed Unicode. It otherwise returns `encodeURIComponent(value)` without trimming; literal percent escapes are encoded again rather than interpreted.
+Version 0.0.3 adds `encodeCcv2PathSegment(value: string): string` at the public root. It is **not available in published 0.0.2**. Pass a raw CCv2 identifier, not an already encoded segment. The helper rejects blank values, more than 128 UTF-16 code units, C0/C1 controls, slash/backslash/query/fragment delimiters, exact `.`/`..`, and malformed Unicode. It otherwise returns `encodeURIComponent(value)` without trimming; literal percent escapes are encoded again rather than interpreted.
 
 Failures throw `Ccv2TransportError` with code `INVALID_URL` for rejected segments or `INVALID_PATH_ENCODING` for malformed Unicode, with no raw identifier or stack. The separate encoding code lets consumer adapters preserve their existing error classification. Consumers retain Action input diagnostics, endpoint assembly and DTO validation. Existing URL validators and transport behavior are unchanged. See the [remaining extraction audit](../../docs/remaining-extraction-audit.md).
