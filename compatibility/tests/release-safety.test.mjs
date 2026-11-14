@@ -5,9 +5,12 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 it('publication requires exact package/channel/confirmation and pre-1.0 version', () => {
-  for (const name of ['notification-contract', 'ccv2-client'])
+  for (const [name, version] of [
+    ['notification-contract', '0.0.4'],
+    ['ccv2-client', '0.0.3'],
+  ])
     expect(releasePlan(name, 'preview', 'PUBLISH-COMMERCEKIT-PREVIEW')).toMatchObject({
-      version: '0.0.3',
+      version,
       tag: 'preview',
     });
   for (const args of [

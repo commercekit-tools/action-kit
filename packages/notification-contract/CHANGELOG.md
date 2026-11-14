@@ -1,5 +1,11 @@
 # notification-contract changelog
 
+## 0.0.4
+
+Add the provider-neutral `ccv2.build-cleanup.completed` event, `BuildCleanupEvent`/`BuildCleanupEventData` public types, shared schema validation and `createBuildCleanupEvent` factory. Cleanup data reports dry-run/apply mode, exact scope, combined retention settings, bounded outcome counts and duration using the existing completed-status vocabulary. Accepted deletion requests are distinct from physical removal. Existing events, schema version 1, sanitizers and factory semantics are preserved.
+
+Prepared for exact-version preview integration with Notify; the consumer must use a compatible cleanup renderer. Package publication is separate from tags/GitHub Releases and does not authorize SAP deletion. Packed-install validation now exercises cleanup imports, validation and declarations through public exports.
+
 ## 0.0.3
 
 Add opt-in `stripAngleBracketText` and `redactJwtLikeTokens` primitives extracted from Build/Deploy. JWT-shaped redaction uses a linear word-run scan to avoid the copied regex's quadratic behavior on repeated prefixes. Existing sanitizers, redaction order, event factories and schema are unchanged. Prepared for preview publication; consumer migrations must verify registry availability before installation.

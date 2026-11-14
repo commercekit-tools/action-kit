@@ -2,7 +2,7 @@
 
 Provider-neutral NotificationEvent v1 types, schema and validation for Notify, Build, Deploy, future Check and reusable workflows. No CCv2 calls, CLI diagnostics, Action I/O, polling, provider rendering or webhook delivery.
 
-Public exports: `NotificationEvent`, `NotificationStatus`, `NotificationEventType`, `NotificationSource`, `NotificationContext`, `NotificationLink`, `SafeNotificationError`, `CheckEventData`, `BuildEventData`, `DeploymentEventData`; `validateNotificationEvent`, `parseNotificationEventJson`, `validateNotificationLink`, `validateGitHubRunUrl`, `extractSafeGitHubContext`, `mergeProducerContext`, `mergeNotifierContext`, `createCheckEvent`, `createBuildEvent`, `createDeploymentEvent`, `redactKnownSecrets`, `sanitizeBoundedText`, `sanitizeLabel`, `sanitizeErrorMessage`.
+Public exports: `NotificationEvent`, `NotificationStatus`, `NotificationEventType`, `NotificationSource`, `NotificationContext`, `NotificationLink`, `SafeNotificationError`, `CheckEventData`, `BuildEventData`, `DeploymentEventData`, `BuildCleanupEvent`, `BuildCleanupEventData`; `validateNotificationEvent`, `parseNotificationEventJson`, `validateNotificationLink`, `validateGitHubRunUrl`, `extractSafeGitHubContext`, `mergeProducerContext`, `mergeNotifierContext`, `createCheckEvent`, `createBuildEvent`, `createDeploymentEvent`, `createBuildCleanupEvent`, `redactKnownSecrets`, `sanitizeBoundedText`, `sanitizeLabel`, `sanitizeErrorMessage`.
 
 ```ts
 import { createCheckEvent, parseNotificationEventJson } from '@commercekit-tools/notification-contract';
@@ -22,7 +22,7 @@ Extraction reads only approved runner fields, never event payloads. Explicit pro
 
 Install from GitHub Packages after a supported version is published. Configure `@commercekit-tools:registry=https://npm.pkg.github.com`; local users need a classic PAT with `read:packages` in user-level configuration. Consumer Actions need package Actions read access and `GITHUB_TOKEN` with `packages: read`. See the repository authentication guide. Pin exact versions, never ranges.
 
-Source version: `0.0.3`, prepared for pre-1.0 integration under the `preview` dist-tag. This manifest is not publication evidence. Verify registry availability before installation and pin `0.0.3` exactly. Stable API and coordinated consumer/Sandbox validation remain future gates. Reservation versions are unsupported.
+Source version: `0.0.4`, prepared for pre-1.0 integration under the `preview` dist-tag. This manifest is not publication evidence. Verify registry availability before installation and pin `0.0.4` exactly. Stable API and coordinated consumer/Sandbox validation remain future gates. Reservation versions are unsupported.
 
 Independent package SemVer applies; stable breaking changes require a major increment. NotificationEvent schema version is separate from package version. Preserve current consumer contracts during migration. No telemetry or logging is performed. Use synthetic tests and register exact runtime secrets; pattern redaction cannot identify all secrets.
 
@@ -34,13 +34,14 @@ The first removes angle brackets and all text between each opening bracket and t
 
 These are opt-in primitives: existing sanitizers/factories do not call them automatically. Consumers retain secret registration, ordering, text bounds, fallback labels and provider escaping. See the [remaining extraction audit](../../docs/remaining-extraction-audit.md) for compatibility evidence and rollout.
 
-## Candidate cleanup event (unpublished)
+## Build cleanup event added in 0.0.4
 
 `createBuildCleanupEvent` creates `ccv2.build-cleanup.completed`. Its data contains
 mode, scope, retention policy, outcome, bounded counts, duration, and an optional
 safe error. A successful `deletionRequestedCount` represents accepted deletion
 initiation, never confirmed physical removal. Status uses the existing completed
 status vocabulary. Producers must sanitize identifiers and errors before creating
-an event. This additive candidate requires a compatible notify renderer; notify
-versions using the published 0.0.3 contract reject this new event. Publication and
-consumer pin updates require separate authorization.
+an event. This additive event requires a compatible Notify renderer. Consumers using
+published 0.0.3 or older reject it. Verify 0.0.4 registry availability and the
+matching Notify revision before enabling this integration; a source manifest
+is not publication evidence.
