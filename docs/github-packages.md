@@ -2,7 +2,7 @@
 
 This is the configuration checklist for future package releases and consumer updates. The release sequence, dispatch confirmations and recovery steps live in [RELEASING.md](../RELEASING.md).
 
-Packages use `https://npm.pkg.github.com` and are associated with public source repository `commercekit-tools/action-kit`. Source visibility does not prove package visibility, access or publication. The current source prepares `0.0.3`; verify registry availability before consumer installation.
+Packages use `https://npm.pkg.github.com` and are associated with public source repository `commercekit-tools/action-kit`. Source visibility does not prove package visibility, access or publication. The current source prepares notification-contract `0.0.4` and ccv2-client `0.0.3`; verify registry availability before consumer installation.
 
 ## Publishing repository
 
@@ -57,7 +57,7 @@ steps:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Pin exact versions only after they are published and accessible. For the prepared release, Notify needs `@commercekit-tools/notification-contract` at `0.0.3`; Build and Deploy need both packages at `0.0.3`. Regenerate and commit each consumer's lockfile and standalone Action bundle using its documented commands, then run its complete quality gate before pushing. Avoid dependency ranges, local links, git dependencies or copied library source in released Actions.
+Pin exact versions only after they are published and accessible. For the prepared release, Notify needs `@commercekit-tools/notification-contract` at `0.0.4` for cleanup events; Build and Deploy continue to use both packages at `0.0.3` until separately migrated. Regenerate and commit each consumer's lockfile and standalone Action bundle using its documented commands, then run its complete quality gate before pushing. Avoid dependency ranges, local links, git dependencies or copied library source in released Actions.
 
 Users running an already bundled Action do not need package registry credentials. Package authentication is needed when installing dependencies to develop or rebuild it.
 
