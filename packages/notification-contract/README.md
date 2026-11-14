@@ -33,3 +33,14 @@ Version 0.0.3 adds `stripAngleBracketText(value: string): string` and `redactJwt
 The first removes angle brackets and all text between each opening bracket and the next closing bracket, discarding an unclosed suffix. It neither parses HTML nor removes script text or decodes entities. The second replaces the existing Build/Deploy `eyJ`-prefixed three-segment token shape with `[REDACTED]`; it does not verify tokens or detect every credential. Both preserve unrelated characters and impose no length bound.
 
 These are opt-in primitives: existing sanitizers/factories do not call them automatically. Consumers retain secret registration, ordering, text bounds, fallback labels and provider escaping. See the [remaining extraction audit](../../docs/remaining-extraction-audit.md) for compatibility evidence and rollout.
+
+## Candidate cleanup event (unpublished)
+
+`createBuildCleanupEvent` creates `ccv2.build-cleanup.completed`. Its data contains
+mode, scope, retention policy, outcome, bounded counts, duration, and an optional
+safe error. A successful `deletionRequestedCount` represents accepted deletion
+initiation, never confirmed physical removal. Status uses the existing completed
+status vocabulary. Producers must sanitize identifiers and errors before creating
+an event. This additive candidate requires a compatible notify renderer; notify
+versions using the published 0.0.3 contract reject this new event. Publication and
+consumer pin updates require separate authorization.

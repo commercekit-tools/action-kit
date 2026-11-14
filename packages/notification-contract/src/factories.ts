@@ -3,6 +3,8 @@ import { schema } from './schema.js';
 import { validateNotificationEvent } from './validate.js';
 import { extractSafeGitHubContext, mergeProducerContext } from './context.js';
 import type {
+  BuildCleanupEvent,
+  BuildCleanupEventData,
   NotificationContext,
   NotificationLink,
   NotificationSource,
@@ -21,7 +23,12 @@ interface Options {
   env?: Readonly<Record<string, string | undefined>>;
   links?: NotificationLink[];
 }
-function create(kind: 'check' | 'build' | 'deployment', status: string, data: object, options: Options) {
+function create(
+  kind: 'check' | 'build' | 'deployment' | 'cleanup',
+  status: string,
+  data: object,
+  options: Options,
+) {
   const allowed = Object.keys(schema.$defs[kind].properties);
   const selected = Object.fromEntries(Object.entries(data).filter(([key]) => allowed.includes(key)));
   if (selected.error && typeof selected.error === 'object') {
@@ -29,9 +36,11 @@ function create(kind: 'check' | 'build' | 'deployment', status: string, data: ob
     selected.error = { ...(e.code !== undefined ? { code: e.code } : {}), message: e.message };
   }
   const eventType =
-    kind === 'check'
-      ? 'check.completed'
-      : `ccv2.${kind}.${status === 'started' ? 'started' : status === 'action-required' ? 'action-required' : 'completed'}`;
+    kind === 'cleanup'
+      ? 'ccv2.build-cleanup.completed'
+      : kind === 'check'
+        ? 'check.completed'
+        : `ccv2.${kind}.${status === 'started' ? 'started' : status === 'action-required' ? 'action-required' : 'completed'}`;
   return validateNotificationEvent({
     schemaVersion: 1,
     eventId: options.eventId ?? `ckevt_${randomUUID()}`,
@@ -46,7 +55,12 @@ function create(kind: 'check' | 'build' | 'deployment', status: string, data: ob
         }
       : {
           product: 'commercekit',
-          component: kind === 'check' ? 'cli-check' : `ccv2-${kind === 'deployment' ? 'deploy' : 'build'}`,
+          component:
+            kind === 'cleanup'
+              ? 'ccv2-build-cleanup'
+              : kind === 'check'
+                ? 'cli-check'
+                : `ccv2-${kind === 'deployment' ? 'deploy' : 'build'}`,
         },
     context: mergeProducerContext(options.context ?? {}, extractSafeGitHubContext(options.env ?? {})),
     data: selected,
@@ -65,4 +79,10 @@ export function createDeploymentEvent(
   input: Options & { status: DeploymentEvent['status']; data: DeploymentEventData },
 ): DeploymentEvent {
   return create('deployment', input.status, input.data, input) as DeploymentEvent;
+}
+
+export function createBuildCleanupEvent(
+  input: Options & { status: BuildCleanupEvent['status']; data: BuildCleanupEventData },
+): BuildCleanupEvent {
+  return create('cleanup', input.status, input.data, input) as BuildCleanupEvent;
 }
