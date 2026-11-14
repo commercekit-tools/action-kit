@@ -2,6 +2,7 @@ export type NotificationStatus =
   'started' | 'success' | 'warning' | 'failure' | 'cancelled' | 'internal-error' | 'action-required';
 export type CompletedStatus = 'success' | 'failure' | 'cancelled' | 'internal-error';
 export type NotificationEventType =
+  | 'ccv2.build-cleanup.completed'
   | 'check.completed'
   | 'ccv2.build.started'
   | 'ccv2.build.completed'
@@ -10,7 +11,7 @@ export type NotificationEventType =
   | 'ccv2.deployment.action-required';
 export interface NotificationSource {
   product: 'commercekit';
-  component: 'cli-check' | 'ccv2-build' | 'ccv2-deploy' | 'workflow';
+  component: 'cli-check' | 'ccv2-build' | 'ccv2-deploy' | 'ccv2-build-cleanup' | 'workflow';
   version?: string;
 }
 export interface NotificationContext {
@@ -94,4 +95,28 @@ export type DeploymentEvent = EventBase &
     | { eventType: 'ccv2.deployment.completed'; status: CompletedStatus }
     | { eventType: 'ccv2.deployment.action-required'; status: 'action-required' }
   ) & { data: DeploymentEventData };
-export type NotificationEvent = CheckEvent | BuildEvent | DeploymentEvent;
+export type NotificationEvent = CheckEvent | BuildEvent | DeploymentEvent | BuildCleanupEvent;
+
+export interface BuildCleanupEventData {
+  mode: 'dry-run' | 'apply';
+  subscriptionCode: string;
+  applicationCode?: string;
+  retentionDays: number;
+  keepLatest: number;
+  cleanupStatus: string;
+  scannedCount: number;
+  eligibleCount: number;
+  plannedCount: number;
+  deletionRequestedCount: number;
+  skippedCount: number;
+  failedCount: number;
+  unknownCount: number;
+  deferredCount: number;
+  durationMs: number;
+  error?: SafeNotificationError;
+}
+export type BuildCleanupEvent = EventBase & {
+  eventType: 'ccv2.build-cleanup.completed';
+  status: CompletedStatus;
+  data: BuildCleanupEventData;
+};
