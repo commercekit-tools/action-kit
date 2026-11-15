@@ -103,6 +103,25 @@ describe('common status and summary presentation', () => {
     expect(summary).toContain('\\[link\\]');
     expect(summary).not.toContain('\n# forged');
   });
+  it('redacts mixed-case encoded secrets and canonical webhook hostnames in facts and links', () => {
+    const secret = 'Synthetic/Private+Value';
+    const encoded = encodeURIComponent(secret).replace(/%[0-9A-F]{2}/g, (escape) => escape.toLowerCase());
+    const url = 'https://' + 'hooks.slack.com./services/synthetic/private/value';
+    const summary = renderActionSummary({
+      title: 'Notify',
+      status: 'failure',
+      secrets: [secret],
+      facts: [{ label: 'Detail', value: `${encoded} ${url}` }],
+      links: [
+        { label: 'Encoded secret', url: `https://example.test/${encoded}` },
+        { label: 'Webhook', url },
+      ],
+    });
+    expect(summary).not.toContain(encoded);
+    expect(summary).not.toContain('/services/synthetic/private/value');
+    expect(summary).not.toContain('### Workflow');
+    expect(summary).toContain('REDACTED');
+  });
   it('omits unsafe or confidential links while encoding parentheses once in safe enterprise links', () => {
     const url =
       'https://github.enterprise.example/org/repo/actions/runs/42?target=(one)(two)&nested=((three))&encoded=%28four%29';

@@ -168,6 +168,28 @@ describe('shared action input context', () => {
       ).inputs.version,
     ).toBe('[REDACTED]');
   });
+  it('redacts URL and form secrets with upper, lower and mixed percent hex without folding literal text', () => {
+    const secret = 'Synthetic/Private+Value €';
+    const url = encodeURIComponent(secret);
+    const form = new URLSearchParams({ value: secret }).toString().slice(6);
+    const lower = url.replace(/%[0-9A-F]{2}/g, (escape) => escape.toLowerCase());
+    const mixed = form.replace(/%[0-9A-F]{2}/g, (escape, index: number) =>
+      index % 2 ? escape.toLowerCase() : escape,
+    );
+    const value = `${url}|${lower}|${mixed}|${form}|${lower}`;
+    expect(redactKnownSecrets(value, [secret])).toBe(Array(5).fill('[REDACTED]').join('|'));
+    expect(redactKnownSecrets(lower.replace('Synthetic', 'synthetic'), [secret])).toBe(
+      lower.replace('Synthetic', 'synthetic'),
+    );
+    const context = createActionInputContext(
+      [{ name: 'client-secret' }, { name: 'branch' }],
+      { 'client-secret': secret, branch: value },
+      { validated: false },
+    );
+    expect(context.inputs.branch).toBe(Array(5).fill('[REDACTED]').join('|'));
+    expect(sanitizeActionText(value, 256, [secret])).toBe(Array(5).fill('[REDACTED]').join('|'));
+    expect(redactKnownSecrets('100% private', ['100% private'])).toBe('[REDACTED]');
+  });
   it('bounds after redaction and marks multibyte previews explicitly', () => {
     const context = createActionInputContext(
       [{ name: 'version' }],
@@ -218,6 +240,10 @@ describe('shared action input context', () => {
     'https://example.test/#private',
     'https://' + 'hooks.slack.com/services/opaque/value',
     'https://hooks.slack-gov.com/services/opaque/value',
+    'https://' + 'hooks.slack.com./services/synthetic/private',
+    'https://' + 'HOOKS.SLACK.COM./services/synthetic/private',
+    'https://' + '%68ooks.slack.com./services/synthetic/private',
+    'https://' + 'hooks.slack-gov.com./services/synthetic/private',
     'https://%',
   ])
     it(`redacts private URL-shaped display text: ${value}`, () =>

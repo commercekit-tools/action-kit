@@ -8,6 +8,8 @@
   Build and Deploy events, preserving their outcome semantics.
 - Preserve the cleanup schema and provider/OAuth boundaries; handle malformed
   Unicode secrets safely in encoded redaction forms.
+- Redact mixed-case percent-encoded secret forms and canonical webhook hostname
+  variants in inputs, summaries and links.
 - Registry readiness remains blocked until separately authorized publication.
 
 ## 0.0.5

@@ -127,7 +127,7 @@ export function renderActionSummary(options: ActionSummaryOptions): string {
             sanitizeActionText(value, Number.MAX_SAFE_INTEGER, secrets) !== value,
         ) ||
         redactJwtLikeTokens(redactKnownSecrets(link.url, secrets)) !== link.url ||
-        /^hooks\.slack(?:-gov)?\.com$/i.test(url.hostname)
+        sanitizeActionText(url.origin, 2048) !== url.origin
       )
         continue;
       links.push(`[${text(link.label, 80)}](${url.href.replace(/\(/g, '%28').replace(/\)/g, '%29')})`);

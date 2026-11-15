@@ -27,6 +27,11 @@ function definitionsChecked(definitions: readonly ActionInputDefinition[]): void
   )
     throw new Error('Invalid action input definitions.');
 }
+function canonicalHostname(hostname: string): string {
+  let end = hostname.length;
+  while (hostname.charCodeAt(end - 1) === 46) end--;
+  return hostname.slice(0, end);
+}
 /** Redact before bounding. Query-bearing/credential URLs and webhooks are never display text. */
 export function sanitizeActionText(value: string, maxLength = 256, secrets: readonly string[] = []): string {
   return sanitizeBoundedText(
@@ -37,7 +42,7 @@ export function sanitizeActionText(value: string, maxLength = 256, secrets: read
           url.password ||
           url.search ||
           url.hash ||
-          /^hooks\.slack(?:-gov)?\.com$/i.test(url.hostname)
+          /^hooks\.slack(?:-gov)?\.com$/i.test(canonicalHostname(url.hostname))
           ? '[REDACTED URL]'
           : text;
       } catch {

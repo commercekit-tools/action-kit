@@ -99,8 +99,8 @@ do not authorize release tags, deployment, provider sends or real SAP deletion.
 
 ## Validation
 
-The additive contract suite passes **388 tests in 12 files** on Node 24.21.0
-and pnpm 12.6.0. Notification-contract coverage is **100% statements, 99.63%
+The additive contract suite passes **394 tests in 12 files** on Node 24.21.0
+and pnpm 12.6.0. Notification-contract coverage is **100% statements, 99.64%
 branches, 100% functions and 100% lines**. All existing 95% thresholds remain
 unchanged, including the untouched CCv2 client package. Focused tests cover every
 new status, confidential-first capture, all-input previews, forged snapshots,
@@ -112,3 +112,10 @@ with installed temporary consumers. Full quality, public scanning and audit must
 pass before the exact-source tarball is retained for final consumer replay.
 Candidate consumer totals and exact artifact/source/bundle fingerprints are
 recorded separately; WIP artifact success is not final registry readiness.
+
+Independent privacy review found and reproduced two gaps before publication:
+known secrets encoded with lowercase/mixed-case percent hex, and Slack webhook
+hosts using a trailing DNS dot. Regression tests now cover raw/URL/form encodings
+with literal case preserved, forged cross-field snapshots, and case/encoded-host/
+trailing-dot webhook variants in values and links. The existing shared redactor
+and display policy were corrected without changing OAuth or transport.
