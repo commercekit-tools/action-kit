@@ -115,7 +115,7 @@
       "if": { "properties": { "eventType": { "const": "ccv2.build-cleanup.completed" } } },
       "then": {
         "properties": {
-          "status": { "enum": ["success", "failure", "cancelled", "internal-error"] },
+          "status": { "enum": ["success", "warning", "failure", "cancelled", "internal-error"] },
           "data": { "$ref": "#/$defs/cleanup" }
         }
       }
@@ -210,9 +210,51 @@
         "unknownCount": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
         "deferredCount": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
         "durationMs": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
-        "error": { "$ref": "#/$defs/error" }
+        "error": { "$ref": "#/$defs/error" },
+        "inputs": { "$ref": "#/$defs/cleanupInputs" },
+        "inputsValidated": { "type": "boolean" },
+        "inputsTruncated": { "type": "boolean" },
+        "protectedCount": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "blockedCount": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "issues": { "type": "array", "maxItems": 3, "items": { "$ref": "#/$defs/error" } }
       },
       "additionalProperties": true
+    },
+    "cleanupInputs": {
+      "type": "object",
+      "required": [
+        "token-endpoint",
+        "client-id",
+        "client-secret",
+        "resource",
+        "subscription-code",
+        "api-base-url",
+        "application-code",
+        "retention-days",
+        "keep-latest",
+        "dry-run",
+        "max-deletions",
+        "exclude-build-codes",
+        "timeout-minutes",
+        "continue-on-delete-error"
+      ],
+      "properties": {
+        "token-endpoint": { "const": "[REDACTED]" },
+        "client-id": { "const": "[REDACTED]" },
+        "client-secret": { "const": "[REDACTED]" },
+        "resource": { "const": "[REDACTED]" },
+        "subscription-code": { "type": "string", "maxLength": 256 },
+        "api-base-url": { "type": "string", "maxLength": 256 },
+        "application-code": { "type": "string", "maxLength": 256 },
+        "retention-days": { "type": "string", "maxLength": 256 },
+        "keep-latest": { "type": "string", "maxLength": 256 },
+        "dry-run": { "type": "string", "maxLength": 256 },
+        "max-deletions": { "type": "string", "maxLength": 256 },
+        "exclude-build-codes": { "type": "string", "maxLength": 256 },
+        "timeout-minutes": { "type": "string", "maxLength": 256 },
+        "continue-on-delete-error": { "type": "string", "maxLength": 256 }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": true

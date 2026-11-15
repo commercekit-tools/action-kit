@@ -2,7 +2,7 @@
 
 Shared contracts and runtime libraries for CommerceKit GitHub Actions. This public repository is a pnpm monorepo, not a GitHub Marketplace Action. There is no root `action.yml`.
 
-The source manifests prepare `notification-contract@0.0.4` and `ccv2-client@0.0.3` under the `preview` dist-tag. Source versions are not registry publication evidence. APIs remain pre-1.0; verify registry publication before installation. Placeholder reserved versions, if published later, are not supported dependencies.
+The source manifests prepare `notification-contract@0.0.5` (unpublished candidate) and `ccv2-client@0.0.3` under the `preview` dist-tag. Source versions are not registry publication evidence. APIs remain pre-1.0; verify registry publication before installation. Placeholder reserved versions, if published later, are not supported dependencies.
 
 | Package                                    | Responsibility                                                                                | Consumers                                                                      |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |

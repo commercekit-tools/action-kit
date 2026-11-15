@@ -35,6 +35,16 @@ function create(
     const e = selected.error as { code?: string; message?: string };
     selected.error = { ...(e.code !== undefined ? { code: e.code } : {}), message: e.message };
   }
+  if (Array.isArray(selected.issues)) {
+    selected.issues = selected.issues.map((issue: unknown) => {
+      if (!issue || typeof issue !== 'object') return issue;
+      const code = 'code' in issue ? issue.code : undefined;
+      return {
+        ...(code !== undefined ? { code } : {}),
+        message: 'message' in issue ? issue.message : undefined,
+      };
+    });
+  }
   const eventType =
     kind === 'cleanup'
       ? 'ccv2.build-cleanup.completed'

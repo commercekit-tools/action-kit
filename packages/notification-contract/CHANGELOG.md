@@ -1,5 +1,21 @@
 # notification-contract changelog
 
+## 0.0.5 — unpublished candidate
+
+Allow the existing `warning` status specifically for build cleanup through new
+public `BuildCleanupStatus`, preserving Build/Deploy `CompletedStatus` semantics.
+Add optional, bounded all-input display context (`BuildCleanupInputSnapshot`),
+validation/truncation flags, protected/blocked counts and safe issue explanations.
+All fourteen snapshot keys are required when supplied; authentication values must
+be literal `[REDACTED]`, public values are at most 256 characters, and at most three
+safe issues are accepted. Issue factories project only safe code/message fields.
+Old cleanup events remain valid and existing event meanings are unchanged.
+
+Registry checks found published 0.0.4 and no 0.0.5. This source version is not a
+published registry dependency. Consumers require coordinated source/tarball tests
+and separately authorized publication before normal exact-version adoption.
+No OAuth/transport, provider delivery, package publication or release change.
+
 ## 0.0.4
 
 Add the provider-neutral `ccv2.build-cleanup.completed` event, `BuildCleanupEvent`/`BuildCleanupEventData` public types, shared schema validation and `createBuildCleanupEvent` factory. Cleanup data reports dry-run/apply mode, exact scope, combined retention settings, bounded outcome counts and duration using the existing completed-status vocabulary. Accepted deletion requests are distinct from physical removal. Existing events, schema version 1, sanitizers and factory semantics are preserved.
