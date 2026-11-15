@@ -93,3 +93,41 @@ const invalidCleanupInputs: BuildCleanupInputSnapshot = {
 void invalidCleanupInputs;
 // @ts-expect-error cleanup warning support does not widen Deploy status
 createDeploymentEvent({ status: 'warning', data: {} });
+
+import {
+  createSetupEvent,
+  createActionInputContext,
+  captureActionInputs,
+  renderActionSummary,
+  getNotificationStyle,
+  type SetupEvent,
+  type NotificationInputContext,
+  type ActionInputDefinition,
+  type ActionSummaryOptions,
+} from '../../packages/notification-contract/src/index.js';
+const definitions: readonly ActionInputDefinition[] = [{ name: 'version' }];
+const captured = captureActionInputs(
+  definitions,
+  () => 'latest',
+  () => {},
+);
+const inputContext: NotificationInputContext = createActionInputContext(definitions, captured, {
+  validated: true,
+});
+const setup: SetupEvent = createSetupEvent({
+  status: 'success',
+  data: { ...inputContext, version: '1.0.0' },
+});
+const summaryOptions: ActionSummaryOptions = {
+  title: 'Setup CommerceKit',
+  status: setup.status,
+  inputContext,
+  facts: [{ label: 'Version', value: '1.0.0' }],
+};
+const summary: string = renderActionSummary(summaryOptions);
+void summary;
+void getNotificationStyle('warning');
+// @ts-expect-error setup cannot use a deployment handoff status
+createSetupEvent({ status: 'action-required', data: {} });
+// @ts-expect-error snapshots are display strings rather than raw objects
+createActionInputContext(definitions, { version: {} }, { validated: false });

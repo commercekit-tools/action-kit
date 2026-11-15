@@ -46,14 +46,30 @@ export function redactJwtLikeTokens(value: string): string {
   return output + value.slice(consumed);
 }
 
+/** Percent hex is case-insensitive; other characters in an encoded secret are not. */
+function redactEncodedSecret(value: string, form: string): string {
+  const normalize = (text: string) => text.replace(/%[a-f0-9]{2}/gi, (escape) => escape.toUpperCase());
+  const haystack = normalize(value);
+  const needle = normalize(form);
+  let cursor = 0;
+  let output = '';
+  let index = haystack.indexOf(needle, cursor);
+  while (index !== -1) {
+    output += value.slice(cursor, index) + '[REDACTED]';
+    cursor = index + form.length;
+    index = haystack.indexOf(needle, cursor);
+  }
+  return output + value.slice(cursor);
+}
+
 export function redactKnownSecrets(value: string, secrets: readonly string[] = []): string {
   for (const secret of [...secrets].filter(Boolean).sort((a, b) => b.length - a.length)) {
     for (const form of new Set([
       secret,
-      encodeURIComponent(secret),
+      encodeURIComponent(new URLSearchParams({ v: secret }).get('v')!),
       new URLSearchParams({ v: secret }).toString().slice(2),
     ]))
-      value = value.split(form).join('[REDACTED]');
+      value = form.includes('%') ? redactEncodedSecret(value, form) : value.split(form).join('[REDACTED]');
   }
   return value
     .replace(/\bBearer\s+[^\s,;]+/gi, 'Bearer [REDACTED]')

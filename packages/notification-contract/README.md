@@ -1,6 +1,6 @@
 # @commercekit-tools/notification-contract
 
-Provider-neutral NotificationEvent v1 types, schema and validation for Notify, Build, Deploy, future Check and reusable workflows. No CCv2 calls, CLI diagnostics, Action I/O, polling, provider rendering or webhook delivery.
+Provider-neutral NotificationEvent v1 types, schema and validation for Notify, Build, Deploy, future Check and reusable workflows. It also provides pure status/summary formatting and bounded input display context. No CCv2 calls, CLI diagnostics, Action I/O, polling, provider rendering or webhook delivery.
 
 Public exports: `NotificationEvent`, `NotificationStatus`, `NotificationEventType`, `NotificationSource`, `NotificationContext`, `NotificationLink`, `SafeNotificationError`, `CheckEventData`, `BuildEventData`, `DeploymentEventData`, `BuildCleanupEvent`, `BuildCleanupEventData`, `BuildCleanupStatus`, `BuildCleanupInputSnapshot`; `validateNotificationEvent`, `parseNotificationEventJson`, `validateNotificationLink`, `validateGitHubRunUrl`, `extractSafeGitHubContext`, `mergeProducerContext`, `mergeNotifierContext`, `createCheckEvent`, `createBuildEvent`, `createDeploymentEvent`, `createBuildCleanupEvent`, `redactKnownSecrets`, `sanitizeBoundedText`, `sanitizeLabel`, `sanitizeErrorMessage`.
 
@@ -22,7 +22,12 @@ Extraction reads only approved runner fields, never event payloads. Explicit pro
 
 Install from GitHub Packages after a supported version is published. Configure `@commercekit-tools:registry=https://npm.pkg.github.com`; local users need a classic PAT with `read:packages` in user-level configuration. Consumer Actions need package Actions read access and `GITHUB_TOKEN` with `packages: read`. See the repository authentication guide. Pin exact versions, never ranges.
 
-Source version: `0.0.5`, an **unpublished candidate**. Registry inspection verified published versions through `0.0.4`; `0.0.5` was absent. Do not pin `0.0.5` as a registry dependency until separately authorized publication is verified. The currently published `0.0.4` package lacks the additions below. Exact-source packed-tarball tests may validate candidate consumers in isolation; no machine-local link belongs in a normal lockfile. Stable API and coordinated consumer/Sandbox validation remain future gates. Reservation versions are unsupported.
+Source version: `0.0.6`, an **unpublished candidate** for consistent ecosystem
+reporting. Exact registry checks verified publication through `0.0.5`; that
+version lacks the new helpers and setup event. Do not pin `0.0.6` as a registry
+dependency until separately authorized publication is verified. Candidate tests
+use exact-source packed tarballs in isolated private consumers with integrity
+records; normal lockfiles must not contain machine-local links.
 
 Independent package SemVer applies; stable breaking changes require a major increment. NotificationEvent schema version is separate from package version. Preserve current consumer contracts during migration. No telemetry or logging is performed. Use synthetic tests and register exact runtime secrets; pattern redaction cannot identify all secrets.
 
@@ -46,13 +51,14 @@ published 0.0.3 or older reject it. Verify 0.0.4 registry availability and the
 matching Notify revision before enabling this integration; a source manifest
 is not publication evidence.
 
-## Cleanup warning and input context — 0.0.5 candidate
+## Cleanup warning and input context — 0.0.5
 
 This additive cleanup-only extension accepts the existing global `warning` status
 through public `BuildCleanupStatus`; Build and Deploy continue using unchanged
 `CompletedStatus`. Old cleanup events remain valid. A published 0.0.4 validator
 rejects cleanup warnings, so producer and Notify revisions must be coordinated.
-No publication, tag, release or consumer migration is performed by these changes.
+The 0.0.5 package was subsequently published through authorized package-only
+workflow run 43667757934. That publication created no Git tag or Action release.
 
 `BuildCleanupEventData` adds optional `inputs`, `inputsValidated`,
 `inputsTruncated`, `protectedCount`, `blockedCount` and `issues` fields. If an
@@ -78,3 +84,20 @@ The factory retains only code/message for each issue, dropping raw nested fields
 then validates the event. Outcome/severity interpretation belongs to the producer:
 a warning must not hide a deletion failure or unknown mutation result. Accepted
 deletion counts still describe initiation rather than physical removal.
+
+## Consistent Action reporting — 0.0.6 candidate
+
+New public exports: `SetupEvent`, `SetupEventData`, `NotificationInputContext`,
+`NotificationInputData`, `ActionInputDefinition`, `NotificationStyle`,
+`ActionSummaryOptions`, `ActionSummarySection`, `createSetupEvent`,
+`captureActionInputs`, `createActionInputContext`, `isConfidentialInputName`,
+`sanitizeActionText`, `getNotificationStyle` and `renderActionSummary`.
+
+Build, Deploy and Check data accept optional bounded input snapshots and issues.
+Setup uses `commercekit.setup.completed`; completed Build/Deploy semantics are
+unchanged. The shared renderer creates a bounded escaped GitHub summary string;
+callers perform Action I/O and preserve operation outcomes if reporting fails.
+
+Read the [format, masking, compatibility and rollout contract](../../docs/action-reporting.md).
+The package remains one of the existing two action-kit packages. No provider
+payload/delivery or OAuth/transport behavior is added here.

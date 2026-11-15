@@ -3,6 +3,8 @@ import { schema } from './schema.js';
 import { validateNotificationEvent } from './validate.js';
 import { extractSafeGitHubContext, mergeProducerContext } from './context.js';
 import type {
+  SetupEvent,
+  SetupEventData,
   BuildCleanupEvent,
   BuildCleanupEventData,
   NotificationContext,
@@ -24,7 +26,7 @@ interface Options {
   links?: NotificationLink[];
 }
 function create(
-  kind: 'check' | 'build' | 'deployment' | 'cleanup',
+  kind: 'check' | 'build' | 'deployment' | 'cleanup' | 'setup',
   status: string,
   data: object,
   options: Options,
@@ -46,11 +48,13 @@ function create(
     });
   }
   const eventType =
-    kind === 'cleanup'
-      ? 'ccv2.build-cleanup.completed'
-      : kind === 'check'
-        ? 'check.completed'
-        : `ccv2.${kind}.${status === 'started' ? 'started' : status === 'action-required' ? 'action-required' : 'completed'}`;
+    kind === 'setup'
+      ? 'commercekit.setup.completed'
+      : kind === 'cleanup'
+        ? 'ccv2.build-cleanup.completed'
+        : kind === 'check'
+          ? 'check.completed'
+          : `ccv2.${kind}.${status === 'started' ? 'started' : status === 'action-required' ? 'action-required' : 'completed'}`;
   return validateNotificationEvent({
     schemaVersion: 1,
     eventId: options.eventId ?? `ckevt_${randomUUID()}`,
@@ -66,11 +70,13 @@ function create(
       : {
           product: 'commercekit',
           component:
-            kind === 'cleanup'
-              ? 'ccv2-build-cleanup'
-              : kind === 'check'
-                ? 'cli-check'
-                : `ccv2-${kind === 'deployment' ? 'deploy' : 'build'}`,
+            kind === 'setup'
+              ? 'setup-commercekit'
+              : kind === 'cleanup'
+                ? 'ccv2-build-cleanup'
+                : kind === 'check'
+                  ? 'cli-check'
+                  : `ccv2-${kind === 'deployment' ? 'deploy' : 'build'}`,
         },
     context: mergeProducerContext(options.context ?? {}, extractSafeGitHubContext(options.env ?? {})),
     data: selected,
@@ -95,4 +101,10 @@ export function createBuildCleanupEvent(
   input: Options & { status: BuildCleanupEvent['status']; data: BuildCleanupEventData },
 ): BuildCleanupEvent {
   return create('cleanup', input.status, input.data, input) as BuildCleanupEvent;
+}
+
+export function createSetupEvent(
+  input: Options & { status: SetupEvent['status']; data: SetupEventData },
+): SetupEvent {
+  return create('setup', input.status, input.data, input) as SetupEvent;
 }

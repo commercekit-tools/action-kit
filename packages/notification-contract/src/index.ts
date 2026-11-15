@@ -4,3 +4,6 @@ export * from './links.js';
 export * from './context.js';
 export * from './sanitize.js';
 export * from './factories.js';
+export * from './input-context.js';
+export * from './reporting-style.js';
+export * from './summary.js';
