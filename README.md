@@ -2,7 +2,7 @@
 
 Shared contracts and runtime libraries for CommerceKit GitHub Actions. This public repository is a pnpm monorepo, not a GitHub Marketplace Action. There is no root `action.yml`.
 
-The source manifests prepare `notification-contract@0.0.5` (unpublished candidate) and `ccv2-client@0.0.3` under the `preview` dist-tag. Source versions are not registry publication evidence. APIs remain pre-1.0; verify registry publication before installation. Placeholder reserved versions, if published later, are not supported dependencies.
+The source manifests prepare `notification-contract@0.0.6` (unpublished candidate) and `ccv2-client@0.0.3` under the `preview` dist-tag. Source versions are not registry publication evidence. APIs remain pre-1.0; verify registry publication before installation. Placeholder reserved versions, if published later, are not supported dependencies.
 
 | Package                                    | Responsibility                                                                                | Consumers                                                                      |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
@@ -41,3 +41,8 @@ See [CONTRIBUTING](CONTRIBUTING.md) for individual commands, [compatibility poli
 Package reservation, preview/stable publication and GitHub Releases are separate manually confirmed owner workflows. Publication never runs on push or PR. [RELEASING](RELEASING.md) describes two-phase recovery and coordinated stable gates. No package or Action is published by this implementation PR.
 
 The manual publish workflow verifies the exact commit's CI/CodeQL results and publishes the tested tarball after an integrity check. A separate manual workflow verifies registry publication before creating a package-specific Git tag and GitHub Release. See [dispatch examples](RELEASING.md#dispatch-examples-after-merge-and-owner-approval). Tags do not trigger publication.
+
+The [consistent Action reporting candidate](docs/action-reporting.md) adds shared
+input snapshots, status styling, GitHub summary formatting and setup events.
+Published 0.0.5 remains the registry baseline; candidate consumer readiness is
+blocked until separately authorized 0.0.6 publication and normal repinning.

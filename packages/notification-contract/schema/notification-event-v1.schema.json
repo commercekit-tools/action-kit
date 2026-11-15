@@ -15,7 +15,8 @@
         "ccv2.deployment.started",
         "ccv2.deployment.action-required",
         "ccv2.deployment.completed",
-        "ccv2.build-cleanup.completed"
+        "ccv2.build-cleanup.completed",
+        "commercekit.setup.completed"
       ]
     },
     "status": {
@@ -27,7 +28,16 @@
       "required": ["product", "component"],
       "properties": {
         "product": { "const": "commercekit" },
-        "component": { "enum": ["cli-check", "ccv2-build", "ccv2-deploy", "workflow", "ccv2-build-cleanup"] },
+        "component": {
+          "enum": [
+            "cli-check",
+            "ccv2-build",
+            "ccv2-deploy",
+            "workflow",
+            "ccv2-build-cleanup",
+            "setup-commercekit"
+          ]
+        },
         "version": { "type": "string", "maxLength": 64 }
       },
       "additionalProperties": true
@@ -119,6 +129,15 @@
           "data": { "$ref": "#/$defs/cleanup" }
         }
       }
+    },
+    {
+      "if": { "properties": { "eventType": { "const": "commercekit.setup.completed" } } },
+      "then": {
+        "properties": {
+          "status": { "enum": ["success", "warning", "failure", "cancelled", "internal-error"] },
+          "data": { "$ref": "#/$defs/setup" }
+        }
+      }
     }
   ],
   "$defs": {
@@ -140,7 +159,11 @@
         "errors": { "type": "integer", "minimum": 0 },
         "warnings": { "type": "integer", "minimum": 0 },
         "durationMs": { "type": "integer", "minimum": 0 },
-        "error": { "$ref": "#/$defs/error" }
+        "error": { "$ref": "#/$defs/error" },
+        "inputs": { "$ref": "#/$defs/actionInputs" },
+        "inputsValidated": { "type": "boolean" },
+        "inputsTruncated": { "type": "boolean" },
+        "issues": { "type": "array", "maxItems": 3, "items": { "$ref": "#/$defs/error" } }
       },
       "additionalProperties": true
     },
@@ -155,7 +178,11 @@
         "buildStatus": { "type": "string", "maxLength": 100 },
         "durationMs": { "type": "integer", "minimum": 0 },
         "retryCount": { "type": "integer", "minimum": 0 },
-        "error": { "$ref": "#/$defs/error" }
+        "error": { "$ref": "#/$defs/error" },
+        "inputs": { "$ref": "#/$defs/actionInputs" },
+        "inputsValidated": { "type": "boolean" },
+        "inputsTruncated": { "type": "boolean" },
+        "issues": { "type": "array", "maxItems": 3, "items": { "$ref": "#/$defs/error" } }
       },
       "additionalProperties": true
     },
@@ -172,7 +199,11 @@
         "deploymentStatus": { "type": "string", "maxLength": 100 },
         "durationMs": { "type": "integer", "minimum": 0 },
         "decisionType": { "type": "string", "maxLength": 100 },
-        "error": { "$ref": "#/$defs/error" }
+        "error": { "$ref": "#/$defs/error" },
+        "inputs": { "$ref": "#/$defs/actionInputs" },
+        "inputsValidated": { "type": "boolean" },
+        "inputsTruncated": { "type": "boolean" },
+        "issues": { "type": "array", "maxItems": 3, "items": { "$ref": "#/$defs/error" } }
       },
       "additionalProperties": true
     },
@@ -255,6 +286,35 @@
         "continue-on-delete-error": { "type": "string", "maxLength": 256 }
       },
       "additionalProperties": false
+    },
+    "actionInputs": {
+      "type": "object",
+      "maxProperties": 50,
+      "propertyNames": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$" },
+      "additionalProperties": { "type": "string", "maxLength": 256 },
+      "patternProperties": {
+        "(?:token|secret|password|credential|webhook|authorization|private-key|api-key)": {
+          "const": "[REDACTED]"
+        },
+        "^(?:client-id|resource)$": { "const": "[REDACTED]" }
+      }
+    },
+    "setup": {
+      "type": "object",
+      "properties": {
+        "inputs": { "$ref": "#/$defs/actionInputs" },
+        "inputsValidated": { "type": "boolean" },
+        "inputsTruncated": { "type": "boolean" },
+        "issues": { "type": "array", "maxItems": 3, "items": { "$ref": "#/$defs/error" } },
+        "requestedVersion": { "type": "string", "maxLength": 256 },
+        "version": { "type": "string", "maxLength": 128 },
+        "target": { "type": "string", "maxLength": 128 },
+        "buildId": { "type": "string", "maxLength": 128 },
+        "cacheHit": { "type": "boolean" },
+        "durationMs": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "error": { "$ref": "#/$defs/error" }
+      },
+      "additionalProperties": true
     }
   },
   "additionalProperties": true

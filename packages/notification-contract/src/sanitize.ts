@@ -50,7 +50,7 @@ export function redactKnownSecrets(value: string, secrets: readonly string[] = [
   for (const secret of [...secrets].filter(Boolean).sort((a, b) => b.length - a.length)) {
     for (const form of new Set([
       secret,
-      encodeURIComponent(secret),
+      encodeURIComponent(new URLSearchParams({ v: secret }).get('v')!),
       new URLSearchParams({ v: secret }).toString().slice(2),
     ]))
       value = value.split(form).join('[REDACTED]');

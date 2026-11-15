@@ -1,6 +1,16 @@
 # notification-contract changelog
 
-## 0.0.5 — unpublished candidate
+## 0.0.6 — unpublished candidate
+
+- Add shared bounded input snapshots, confidential-first capture, safe text
+  display, status styles and pure GitHub summary formatting.
+- Add setup-completed events and optional input/issue context to existing Check,
+  Build and Deploy events, preserving their outcome semantics.
+- Preserve the cleanup schema and provider/OAuth boundaries; handle malformed
+  Unicode secrets safely in encoded redaction forms.
+- Registry readiness remains blocked until separately authorized publication.
+
+## 0.0.5
 
 Allow the existing `warning` status specifically for build cleanup through new
 public `BuildCleanupStatus`, preserving Build/Deploy `CompletedStatus` semantics.
@@ -11,10 +21,10 @@ be literal `[REDACTED]`, public values are at most 256 characters, and at most t
 safe issues are accepted. Issue factories project only safe code/message fields.
 Old cleanup events remain valid and existing event meanings are unchanged.
 
-Registry checks found published 0.0.4 and no 0.0.5. This source version is not a
-published registry dependency. Consumers require coordinated source/tarball tests
-and separately authorized publication before normal exact-version adoption.
-No OAuth/transport, provider delivery, package publication or release change.
+Published from `7cc2e8e6af46e7438064cc6205b22f4f7154eb94` by the owner-authorized
+package-only workflow run 43667757934. Registry integrity matched the previously
+tested source artifact. No Git tag, Action release, OAuth/transport change or
+provider delivery implementation was introduced.
 
 ## 0.0.4
 

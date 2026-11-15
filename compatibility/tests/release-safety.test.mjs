@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 it('publication requires exact package/channel/confirmation and pre-1.0 version', () => {
   for (const [name, version] of [
-    ['notification-contract', '0.0.5'],
+    ['notification-contract', '0.0.6'],
     ['ccv2-client', '0.0.3'],
   ])
     expect(releasePlan(name, 'preview', 'PUBLISH-COMMERCEKIT-PREVIEW')).toMatchObject({

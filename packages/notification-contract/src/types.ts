@@ -4,6 +4,7 @@ export type CompletedStatus = 'success' | 'failure' | 'cancelled' | 'internal-er
 /** Cleanup warning support does not change Build or Deploy completed semantics. */
 export type BuildCleanupStatus = CompletedStatus | 'warning';
 export type NotificationEventType =
+  | 'commercekit.setup.completed'
   | 'ccv2.build-cleanup.completed'
   | 'check.completed'
   | 'ccv2.build.started'
@@ -13,7 +14,8 @@ export type NotificationEventType =
   | 'ccv2.deployment.action-required';
 export interface NotificationSource {
   product: 'commercekit';
-  component: 'cli-check' | 'ccv2-build' | 'ccv2-deploy' | 'ccv2-build-cleanup' | 'workflow';
+  component:
+    'cli-check' | 'ccv2-build' | 'ccv2-deploy' | 'ccv2-build-cleanup' | 'setup-commercekit' | 'workflow';
   version?: string;
 }
 export interface NotificationContext {
@@ -37,7 +39,33 @@ export interface SafeNotificationError {
   code?: string;
   message: string;
 }
-export interface CheckEventData {
+/** Display-only context. Producers include every configured input name and redact secrets. */
+export interface NotificationInputContext {
+  inputs: Readonly<Record<string, string>>;
+  inputsValidated: boolean;
+  inputsTruncated: boolean;
+}
+export interface NotificationInputData {
+  inputs?: Readonly<Record<string, string>>;
+  inputsValidated?: boolean;
+  inputsTruncated?: boolean;
+  issues?: SafeNotificationError[];
+}
+export interface SetupEventData extends NotificationInputData {
+  requestedVersion?: string;
+  version?: string;
+  target?: string;
+  buildId?: string;
+  cacheHit?: boolean;
+  durationMs?: number;
+  error?: SafeNotificationError;
+}
+export type SetupEvent = EventBase & {
+  eventType: 'commercekit.setup.completed';
+  status: CompletedStatus | 'warning';
+  data: SetupEventData;
+};
+export interface CheckEventData extends NotificationInputData {
   mode?: 'full' | 'changed';
   changedFrom?: string;
   filesChecked?: number;
@@ -46,7 +74,7 @@ export interface CheckEventData {
   durationMs?: number;
   error?: SafeNotificationError;
 }
-export interface BuildEventData {
+export interface BuildEventData extends NotificationInputData {
   subscriptionCode?: string;
   applicationCode?: string;
   buildCode?: string;
@@ -57,7 +85,7 @@ export interface BuildEventData {
   retryCount?: number;
   error?: SafeNotificationError;
 }
-export interface DeploymentEventData {
+export interface DeploymentEventData extends NotificationInputData {
   subscriptionCode?: string;
   applicationCode?: string;
   deploymentCode?: string;
@@ -97,7 +125,7 @@ export type DeploymentEvent = EventBase &
     | { eventType: 'ccv2.deployment.completed'; status: CompletedStatus }
     | { eventType: 'ccv2.deployment.action-required'; status: 'action-required' }
   ) & { data: DeploymentEventData };
-export type NotificationEvent = CheckEvent | BuildEvent | DeploymentEvent | BuildCleanupEvent;
+export type NotificationEvent = CheckEvent | BuildEvent | DeploymentEvent | BuildCleanupEvent | SetupEvent;
 
 /** Bounded display context only; authentication values must never enter an event. */
 export interface BuildCleanupInputSnapshot {
