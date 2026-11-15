@@ -1,6 +1,8 @@
 export type NotificationStatus =
   'started' | 'success' | 'warning' | 'failure' | 'cancelled' | 'internal-error' | 'action-required';
 export type CompletedStatus = 'success' | 'failure' | 'cancelled' | 'internal-error';
+/** Cleanup warning support does not change Build or Deploy completed semantics. */
+export type BuildCleanupStatus = CompletedStatus | 'warning';
 export type NotificationEventType =
   | 'ccv2.build-cleanup.completed'
   | 'check.completed'
@@ -97,6 +99,23 @@ export type DeploymentEvent = EventBase &
   ) & { data: DeploymentEventData };
 export type NotificationEvent = CheckEvent | BuildEvent | DeploymentEvent | BuildCleanupEvent;
 
+/** Bounded display context only; authentication values must never enter an event. */
+export interface BuildCleanupInputSnapshot {
+  'token-endpoint': '[REDACTED]';
+  'client-id': '[REDACTED]';
+  'client-secret': '[REDACTED]';
+  resource: '[REDACTED]';
+  'subscription-code': string;
+  'api-base-url': string;
+  'application-code': string;
+  'retention-days': string;
+  'keep-latest': string;
+  'dry-run': string;
+  'max-deletions': string;
+  'exclude-build-codes': string;
+  'timeout-minutes': string;
+  'continue-on-delete-error': string;
+}
 export interface BuildCleanupEventData {
   mode: 'dry-run' | 'apply';
   subscriptionCode: string;
@@ -114,9 +133,16 @@ export interface BuildCleanupEventData {
   deferredCount: number;
   durationMs: number;
   error?: SafeNotificationError;
+  /** Optional for compatibility with events emitted before 0.0.5. */
+  inputs?: BuildCleanupInputSnapshot;
+  inputsValidated?: boolean;
+  inputsTruncated?: boolean;
+  protectedCount?: number;
+  blockedCount?: number;
+  issues?: SafeNotificationError[];
 }
 export type BuildCleanupEvent = EventBase & {
   eventType: 'ccv2.build-cleanup.completed';
-  status: CompletedStatus;
+  status: BuildCleanupStatus;
   data: BuildCleanupEventData;
 };

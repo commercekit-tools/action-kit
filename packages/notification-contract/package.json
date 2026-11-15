@@ -1,6 +1,6 @@
 {
   "name": "@commercekit-tools/notification-contract",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Provider-neutral NotificationEvent v1 contracts and factories.",
   "license": "MIT",
   "type": "module",

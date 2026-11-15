@@ -1,5 +1,9 @@
 import {
   createBuildEvent,
+  createBuildCleanupEvent,
+  type BuildCleanupEvent,
+  type BuildCleanupStatus,
+  type BuildCleanupInputSnapshot,
   stripAngleBracketText,
   redactJwtLikeTokens,
   createDeploymentEvent,
@@ -37,3 +41,55 @@ encodeCcv2PathSegment(123);
 stripAngleBracketText(null);
 // @ts-expect-error JWT-like redaction accepts strings only
 redactJwtLikeTokens({});
+
+const cleanupInputs: BuildCleanupInputSnapshot = {
+  'token-endpoint': '[REDACTED]',
+  'client-id': '[REDACTED]',
+  'client-secret': '[REDACTED]',
+  resource: '[REDACTED]',
+  'subscription-code': 'synthetic',
+  'api-base-url': 'https://synthetic.example',
+  'application-code': '',
+  'retention-days': '30',
+  'keep-latest': '10',
+  'dry-run': 'true',
+  'max-deletions': '20',
+  'exclude-build-codes': '',
+  'timeout-minutes': '15',
+  'continue-on-delete-error': 'false',
+};
+const cleanupStatus: BuildCleanupStatus = 'warning';
+const cleanup: BuildCleanupEvent = createBuildCleanupEvent({
+  status: cleanupStatus,
+  data: {
+    mode: 'dry-run',
+    subscriptionCode: 'synthetic',
+    retentionDays: 30,
+    keepLatest: 10,
+    cleanupStatus: 'blocked',
+    scannedCount: 1,
+    eligibleCount: 0,
+    plannedCount: 0,
+    deletionRequestedCount: 0,
+    skippedCount: 1,
+    failedCount: 0,
+    unknownCount: 0,
+    deferredCount: 0,
+    durationMs: 1,
+    inputs: cleanupInputs,
+    inputsValidated: true,
+    inputsTruncated: false,
+    protectedCount: 1,
+    blockedCount: 0,
+    issues: [{ code: 'eligibility-unverified', message: 'Safe explanation.' }],
+  },
+});
+void cleanup;
+const invalidCleanupInputs: BuildCleanupInputSnapshot = {
+  ...cleanupInputs,
+  // @ts-expect-error credentials must be redacted before event construction
+  'client-secret': 'synthetic-confidential-value',
+};
+void invalidCleanupInputs;
+// @ts-expect-error cleanup warning support does not widen Deploy status
+createDeploymentEvent({ status: 'warning', data: {} });
