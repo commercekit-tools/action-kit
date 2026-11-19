@@ -1,6 +1,6 @@
 # Migration plan
 
-No consumer migration is included here. Use separate focused PRs after preview publication:
+This is the reusable sequence for future package migrations. Current published versions and completed source adoptions are recorded once in the [compatibility record](release-status.md); the steps below are not a claim that those migrations are still missing. Use focused PRs for each future new version after publication:
 
 1. Publish notification-contract preview.
 2. Migrate Notify.

@@ -1,6 +1,6 @@
 # @commercekit-tools/notification-contract
 
-Provider-neutral NotificationEvent v1 types, schema and validation for Notify, Build, Deploy, future Check and reusable workflows. It also provides pure status/summary formatting and bounded input display context. No CCv2 calls, CLI diagnostics, Action I/O, polling, provider rendering or webhook delivery.
+Provider-neutral NotificationEvent v1 types, schema and validation for Notify, Setup, Build, Deploy and Cleanup, with future Check/reusable-workflow consumers. It also provides pure status/summary formatting and bounded input display context. No CCv2 calls, CLI diagnostics, Action I/O, polling, provider rendering or webhook delivery.
 
 Public exports: `NotificationEvent`, `NotificationStatus`, `NotificationEventType`, `NotificationSource`, `NotificationContext`, `NotificationLink`, `SafeNotificationError`, `CheckEventData`, `BuildEventData`, `DeploymentEventData`, `BuildCleanupEvent`, `BuildCleanupEventData`, `BuildCleanupStatus`, `BuildCleanupInputSnapshot`; `validateNotificationEvent`, `parseNotificationEventJson`, `validateNotificationLink`, `validateGitHubRunUrl`, `extractSafeGitHubContext`, `mergeProducerContext`, `mergeNotifierContext`, `createCheckEvent`, `createBuildEvent`, `createDeploymentEvent`, `createBuildCleanupEvent`, `redactKnownSecrets`, `sanitizeBoundedText`, `sanitizeLabel`, `sanitizeErrorMessage`.
 
@@ -22,12 +22,11 @@ Extraction reads only approved runner fields, never event payloads. Explicit pro
 
 Install from GitHub Packages after a supported version is published. Configure `@commercekit-tools:registry=https://npm.pkg.github.com`; local users need a classic PAT with `read:packages` in user-level configuration. Consumer Actions need package Actions read access and `GITHUB_TOKEN` with `packages: read`. See the repository authentication guide. Pin exact versions, never ranges.
 
-Source version: `0.0.6`, an **unpublished candidate** for consistent ecosystem
-reporting. Exact registry checks verified publication through `0.0.5`; that
-version lacks the new helpers and setup event. Do not pin `0.0.6` as a registry
-dependency until separately authorized publication is verified. Candidate tests
-use exact-source packed tarballs in isolated private consumers with integrity
-records; normal lockfiles must not contain machine-local links.
+Version `0.0.6` is a published pre-1.0 preview. Use the
+[publication and consumer compatibility record](../../docs/release-status.md)
+for immutable publication evidence, supported exact pins and the distinction
+between source integrations and released Action interfaces. Verify future
+versions before adoption; normal lockfiles must not contain machine-local links.
 
 Independent package SemVer applies; stable breaking changes require a major increment. NotificationEvent schema version is separate from package version. Preserve current consumer contracts during migration. No telemetry or logging is performed. Use synthetic tests and register exact runtime secrets; pattern redaction cannot identify all secrets.
 
@@ -85,7 +84,7 @@ then validates the event. Outcome/severity interpretation belongs to the produce
 a warning must not hide a deletion failure or unknown mutation result. Accepted
 deletion counts still describe initiation rather than physical removal.
 
-## Consistent Action reporting — 0.0.6 candidate
+## Consistent Action reporting — 0.0.6 preview
 
 New public exports: `SetupEvent`, `SetupEventData`, `NotificationInputContext`,
 `NotificationInputData`, `ActionInputDefinition`, `NotificationStyle`,

@@ -2,7 +2,7 @@
 
 This is the configuration checklist for future package releases and consumer updates. The release sequence, dispatch confirmations and recovery steps live in [RELEASING.md](../RELEASING.md).
 
-Packages use `https://npm.pkg.github.com` and are associated with public source repository `commercekit-tools/action-kit`. Source visibility does not prove package visibility, access or publication. The current source prepares notification-contract `0.0.4` and ccv2-client `0.0.3`; verify registry availability before consumer installation.
+Packages use `https://npm.pkg.github.com` and are associated with public source repository `commercekit-tools/action-kit`. Source visibility does not prove package visibility, access or publication. See the [published-package and consumer compatibility record](release-status.md) for supported exact versions and publication evidence. Verify any future version before consumer installation.
 
 ## Publishing repository
 
@@ -28,12 +28,12 @@ For each package, open its GitHub Packages settings and verify the following aft
 - The publishing repository has package write access, through inherited repository access or explicit **Manage Actions access**.
 - Consumer repositories have **Read** permission under **Manage Actions access** as listed below.
 
-| Package                 | Consumer repositories                                                                       |
-| ----------------------- | ------------------------------------------------------------------------------------------- |
-| `notification-contract` | `commercekit-tools/notify`, `commercekit-tools/ccv2-build`, `commercekit-tools/ccv2-deploy` |
-| `ccv2-client`           | `commercekit-tools/ccv2-build`, `commercekit-tools/ccv2-deploy`                             |
-
-Grant the future Check repository contract access only when that repository exists and needs installation. Verify exact-version installation using each consumer repository's own workflow token; successful installation with an owner's local token does not verify Actions access.
+The [consumer-pin table](release-status.md#consumer-pins) owns the current
+package-specific access list, including Setup, Cleanup and the integration
+harness. Grant read access only for the packages each repository installs.
+Future Check or reusable-workflow repositories need grants only when they exist
+and install a package. Verify installation with each consumer's own workflow
+token; an owner's local token does not prove Actions access.
 
 ## Consumer CI
 
@@ -57,7 +57,7 @@ steps:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Pin exact versions only after they are published and accessible. For the prepared release, Notify needs `@commercekit-tools/notification-contract` at `0.0.4` for cleanup events; Build and Deploy continue to use both packages at `0.0.3` until separately migrated. Regenerate and commit each consumer's lockfile and standalone Action bundle using its documented commands, then run its complete quality gate before pushing. Avoid dependency ranges, local links, git dependencies or copied library source in released Actions.
+Use the supported exact pins in the [compatibility record](release-status.md#consumer-pins). For future upgrades, verify publication and access before repinning. Regenerate and commit each consumer's lockfile and standalone Action bundle using its documented commands, then run its complete quality gate before pushing. Avoid dependency ranges, local links, git dependencies or copied library source in released Actions.
 
 Users running an already bundled Action do not need package registry credentials. Package authentication is needed when installing dependencies to develop or rebuild it.
 

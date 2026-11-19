@@ -1,7 +1,7 @@
-# Consistent Action reporting candidate
+# Consistent Action reporting
 
-The five release-candidate Actions are setup-commercekit, ccv2-build,
-ccv2-deploy, ccv2-build-cleanup and notify. They share this reporting contract
+The reporting implementations in setup-commercekit, ccv2-build,
+ccv2-deploy, ccv2-build-cleanup and notify share this contract
 through the existing notification-contract package. No new package, authentication
 implementation, provider delivery, schedule or SAP operation is introduced.
 
@@ -73,45 +73,20 @@ The package contains no CLI execution, Action I/O or provider renderer. Factorie
 project known event fields and validate; callers retain endpoint-specific result
 projection and register tokens with their existing masker.
 
-## Provenance and rollout gate
+## Release and validation provenance
 
-Source prepares **0.0.6**, an unpublished candidate. Registry-backed baseline
-0.0.5 is published; it lacks these shared helpers and the setup event. Existing
-source baselines inspected for this change:
+These helpers are available in published notification-contract 0.0.6. Use normal
+exact registry dependencies, not private candidate tarballs or machine-local
+links. The [publication and consumer compatibility record](release-status.md)
+owns the successful publication evidence, reviewed source pins and separate
+Action release status. Setup's released v1 interface does not yet contain the
+reporting output present on main.
 
-| Repository               | Main inspected                             |
-| ------------------------ | ------------------------------------------ |
-| action-kit               | `7cc2e8e6af46e7438064cc6205b22f4f7154eb94` |
-| notify                   | `6331ff4a60956a3a2b546e84d737c9338ca46bda` |
-| setup-commercekit        | `7f650f3162ab027bfd784cf879832f44d3248584` |
-| ccv2-build               | `923535d589bd8cebece4f3cbf479608f9535c4c3` |
-| ccv2-deploy              | `bb6d1d6a2ac43a5b6e5b6831c78c5cf28bdb95ca` |
-| ccv2-build-cleanup       | `9b7ab34515a2fb8ed643f786f754e44e485868d2` |
-| action-integration-tests | `e6cefd75d5a926ca2232ac06f332e5b4394a09b5` |
-
-Candidate consumers must use the exact-source packed tarball only in isolated
-private integration workspaces, recording source commits, tarball integrity and
-bundle hashes. Normal registry dependencies/lockfiles must never pretend that
-0.0.6 is published or contain developer-local links. Consumer readiness remains
-**BLOCKED** until a separately authorized publication, exact registry repinning,
-normal bundle regeneration and green validation. Publication and source merge
-do not authorize release tags, deployment, provider sends or real SAP deletion.
-
-## Validation
-
-The additive contract suite passes **394 tests in 12 files** on Node 24.21.0
-and pnpm 12.6.0. Notification-contract coverage is **100% statements, 99.64%
-branches, 100% functions and 100% lines**. All existing 95% thresholds remain
-unchanged, including the untouched CCv2 client package. Focused tests cover every
-new status, confidential-first capture, all-input previews, forged snapshots,
-malformed Unicode secrets, schema/type compatibility, private links, Markdown/
-HTML escaping, explicit truncation and the UTF-8 summary cap.
-
-Packed ESM, JSON schema, declarations and public export boundaries are exercised
-with installed temporary consumers. Full quality, public scanning and audit must
-pass before the exact-source tarball is retained for final consumer replay.
-Candidate consumer totals and exact artifact/source/bundle fingerprints are
-recorded separately; WIP artifact success is not final registry readiness.
+The original source-candidate baseline table, test totals and packed replay
+procedure remain archived in the
+[immutable pre-publication report](https://github.com/commercekit-tools/action-kit/blob/3fecce40414d709884fa48e48eca278f470b20b0/docs/action-reporting.md#provenance-and-rollout-gate).
+Those historical results do not replace current consumer validation or prove
+live provider delivery, real SAP behavior or coordinated stable readiness.
 
 Independent privacy review found and reproduced two gaps before publication:
 known secrets encoded with lowercase/mixed-case percent hex, and Slack webhook

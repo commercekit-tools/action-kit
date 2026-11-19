@@ -1,4 +1,10 @@
-# Remaining consumer extraction audit
+# Historical remaining consumer extraction audit
+
+This records the 2026-11-11 extraction decisions and source-stage rollout plan.
+The additive packages and later consumer adoptions are now published and tracked
+in the [current compatibility record](release-status.md). Keep the original
+baselines and unreleased wording below as historical evidence, not current
+installation instructions.
 
 Compared current remote main and clean local consumer branches on 2026-11-11. The shared schema, event factories, generic context, token lifecycle, bounded HTTP reads and policy-driven retries are already consumed from published packages at exactly `0.0.2`.
 

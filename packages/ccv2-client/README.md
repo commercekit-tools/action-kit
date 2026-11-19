@@ -36,7 +36,7 @@ Inject fetch, clock, abortable sleep, random and secret masking through `runtime
 
 Install from GitHub Packages after a supported version is published. Configure `@commercekit-tools:registry=https://npm.pkg.github.com`; local users need a classic PAT with `read:packages` in user-level configuration. Consumer Actions need package Actions read access and `GITHUB_TOKEN` with `packages: read`. See the repository authentication guide. Pin exact versions, never ranges.
 
-Source version: `0.0.3`, prepared for pre-1.0 integration under the `preview` dist-tag. This manifest is not publication evidence. Verify registry availability before installation and pin `0.0.3` exactly. Stable API and coordinated consumer/Sandbox validation remain future gates. Reservation versions are unsupported.
+Version `0.0.3` is a published pre-1.0 preview. See the [publication and consumer compatibility record](../../docs/release-status.md) for evidence and supported exact pins. Verify future versions before installation. Stable API and coordinated release validation remain separate gates. Reservation versions are unsupported.
 
 Independent package SemVer applies; stable breaking changes require a major increment. NotificationEvent schema version is separate from package version. Preserve current consumer contracts during migration. No telemetry or logging is performed. Use synthetic tests and register exact runtime secrets; pattern redaction cannot identify all secrets.
 
