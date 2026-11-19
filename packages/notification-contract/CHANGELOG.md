@@ -1,6 +1,6 @@
 # notification-contract changelog
 
-## 0.0.6 — unpublished candidate
+## 0.0.6 — published preview
 
 - Add shared bounded input snapshots, confidential-first capture, safe text
   display, status styles and pure GitHub summary formatting.
@@ -10,7 +10,9 @@
   Unicode secrets safely in encoded redaction forms.
 - Redact mixed-case percent-encoded secret forms and canonical webhook hostname
   variants in inputs, summaries and links.
-- Registry readiness remains blocked until separately authorized publication.
+- Published on 2026-11-15 through owner-authorized package-only run 43678067818.
+  See the [central publication/consumer record](../../docs/release-status.md) for
+  immutable evidence and the separately unreleased Action enhancements.
 
 ## 0.0.5
 
