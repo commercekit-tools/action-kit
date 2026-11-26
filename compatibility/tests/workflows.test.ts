@@ -17,6 +17,22 @@ it('CI is read-only and never publishes', () => {
   expect(Object.keys(ci.on)).toEqual(['pull_request', 'push', 'workflow_dispatch']);
   expect(JSON.stringify(ci)).not.toMatch(/packages.*write|npm publish/);
 });
+it('keeps CodeQL steps on one version and groups their Dependabot updates', () => {
+  const codeqlActions = workflow('codeql')
+    .jobs.analyze.steps.map((step: { uses?: string }) => step.uses)
+    .filter(
+      (action: string | undefined): action is string =>
+        action !== undefined && action.startsWith('github/codeql-action/'),
+    );
+  expect(codeqlActions.length).toBeGreaterThan(1);
+  expect(new Set(codeqlActions.map((action: string) => action.split('@')[1])).size).toBe(1);
+
+  const dependabot = parse(readFileSync('.github/dependabot.yml', 'utf8'));
+  const actionsUpdates = dependabot.updates.find(
+    (update: { 'package-ecosystem': string }) => update['package-ecosystem'] === 'github-actions',
+  );
+  expect(actionsUpdates.groups.codeql.patterns).toEqual(['github/codeql-action/*']);
+});
 for (const name of ['reserve-package-names', 'publish-package', 'create-package-release'])
   it(name + ' is manually guarded with least permissions', () => {
     const w = workflow(name);
